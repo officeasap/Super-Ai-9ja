@@ -30,7 +30,7 @@ type Lesson = {
   slug: string
   title: string
   summary: string | null
-  content: string | null
+  content?: string | null
   display_order: number
   estimated_minutes: number | null
 }
@@ -379,7 +379,7 @@ function CoursePage() {
 
       const lessonResult = await supabase
         .from('lessons')
-        .select('id,course_id,slug,title,summary,content,display_order,estimated_minutes')
+        .select('id,course_id,slug,title,summary,display_order,estimated_minutes')
         .eq('course_id', courseId)
         .eq('status', 'published')
         .not('published_at', 'is', null)
