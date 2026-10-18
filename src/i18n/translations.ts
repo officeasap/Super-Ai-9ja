@@ -77,6 +77,7 @@ export interface TranslationSet {
   readonly accessPolicyPending: string
   readonly openCourse: string
   readonly freePreview: string
+  readonly teamTestingAccess: string
   readonly accessVerificationRequired: string
   readonly subscriptionRequired: string
   readonly lockedTitle: string
@@ -128,6 +129,7 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
     accessPolicyPending: "Access policy verification required",
     openCourse: "Explore course",
     freePreview: "Free first lesson",
+    teamTestingAccess: "Temporary team testing access",
     accessVerificationRequired: "Access check required",
     subscriptionRequired: "COURSE ACCESS",
     lockedTitle: "Continue your learning",
@@ -241,6 +243,7 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
     accessPolicyPending: "Need to check access rules",
     openCourse: "Explore course",
     freePreview: "First lesson free",
+    teamTestingAccess: "Temporary team testing access",
     accessVerificationRequired: "Need to check access",
     subscriptionRequired: "COURSE ACCESS",
     lockedTitle: "Continue your learning",
@@ -354,6 +357,7 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
     accessPolicyPending: "A nílò láti ṣàyẹ̀wò ìlànà ààyè",
     openCourse: "Ṣí kóòsì",
     freePreview: "Ẹ̀kọ́ àkọ́kọ́ lọ́fẹ̀ẹ́",
+    teamTestingAccess: "Àyè ìdánwò ẹgbẹ́ fún ìgbà díẹ̀",
     accessVerificationRequired: "A nílò ìjẹ́rìí ààyè",
     subscriptionRequired: "ÀÀYÈ KÓÒSÌ",
     lockedTitle: "Tẹ̀síwájú nínú ẹ̀kọ́ rẹ",
@@ -467,6 +471,7 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
     accessPolicyPending: "Ana buƙatar tabbatar da damar shiga",
     openCourse: "Duba darasi",
     freePreview: "Darasi na farko kyauta",
+    teamTestingAccess: "Izinin gwajin ƙungiya na ɗan lokaci",
     accessVerificationRequired: "Ana buƙatar duba damar shiga",
     subscriptionRequired: "DAMAR DARASI",
     lockedTitle: "Ci gaba da karatu",
@@ -580,6 +585,7 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
     accessPolicyPending: "A ga-enyocha ikike ịbanye",
     openCourse: "Lelee nkuzi",
     freePreview: "Nkuzi mbụ bụ n'efu",
+    teamTestingAccess: "Ikike nnwale ndị otu nwa oge",
     accessVerificationRequired: "A chọrọ nkwenye ikike ịbanye",
     subscriptionRequired: "IKIKE NKUZI",
     lockedTitle: "Gaa n'ihu n'ịmụ ihe",
