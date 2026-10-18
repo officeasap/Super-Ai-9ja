@@ -508,17 +508,66 @@ function LessonPage() {
 
 function SignInPage() {
   const { t } = useLanguage()
-
+  const [params] = useSearchParams()
+  const navigate = useNavigate()
+  const { session, loading } = useSession()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
+  const candidate = params.get('returnTo')
+  const returnTo = candidate && candidate.startsWith('/') && !candidate.startsWith('//') && !candidate.startsWith('/\\') ? candidate : '/dashboard'
+  useEffect(() => { if (session && !loading) navigate(returnTo, { replace: true }) }, [session, loading, returnTo, navigate])
+  async function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setError('')
+    if (!supabase) { setError(t.supabaseUnavailable); return }
+    setBusy(true)
+    const result = await supabase.auth.signInWithPassword({ email: email.trim(), password })
+    setBusy(false)
+    if (result.error) { setError(t.signInFailed); return }
+    navigate(returnTo, { replace: true })
+  }
   return (
-    <PageShell>
-      <main className="simple-page">
-        <p className="eyebrow">{t.account}</p>
-        <h1>{t.signInUnavailable}</h1>
-        <p>{t.signInDescription}</p>
-        <Link className="button button-primary" to="/learning">{t.publishedCourses}</Link>
-      </main>
-    </PageShell>
+    <PageShell><main className="simple-page auth-page"><p className="eyebrow">{t.account}</p><h1>{t.signInTitle}</h1><p>{t.signInDescription}</p>
+      <form className="auth-form" onSubmit={submit}>
+        <label>{t.email}<input type="email" autoComplete="email" required value={email} onChange={event => setEmail(event.target.value)} /></label>
+        <label>{t.password}<input type="password" autoComplete="current-password" required value={password} onChange={event => setPassword(event.target.value)} /></label>
+        {error && <p role="alert" className="form-error">{error}</p>}
+        <button className="button button-primary" type="submit" disabled={busy}>{busy ? t.signingIn : t.signIn}</button>
+      </form>
+      <p>{t.noAccountYet} {t.contactSupport}</p>
+    </main></PageShell>
   )
+}
+
+function DashboardPage() {
+  const { t } = useLanguage()
+  const { session, loading } = useSession()
+  const navigate = useNavigate()
+  const [busy, setBusy] = useState(false)
+  useEffect(() => { if (!loading && !session) navigate('/login?returnTo=%2Fdashboard', { replace: true }) }, [loading, session, navigate])
+  async function signOut() {
+    if (!supabase) return
+    setBusy(true)
+    const result = await supabase.auth.signOut()
+    setBusy(false)
+    if (!result.error) navigate('/', { replace: true })
+  }
+  if (loading) return <PageShell><main className="simple-page"><p role="status">{t.accountLoading}</p></main></PageShell>
+  if (!session) return <PageShell><main className="simple-page"><p>{t.authRequired}</p></main></PageShell>
+  return <PageShell><main className="simple-page"><p className="eyebrow">{t.account}</p><h1>{t.dashboardTitle}</h1><p>{t.dashboardDescription}</p><p className="state-panel">{session.user.email}</p><div className="hero-actions"><Link className="button button-primary" to="/learning">{t.browseCourses}</Link><Link className="button button-secondary" to="/subscribe">{t.navPlans}</Link><button className="button button-secondary" type="button" disabled={busy} onClick={() => void signOut()}>{busy ? t.signingOut : t.signOut}</button></div></main></PageShell>
+}
+
+function SubscriptionPage() {
+  const { t } = useLanguage()
+  const [params] = useSearchParams()
+  const courseId = params.get('courseId')
+  const returnToValue = params.get('returnTo')
+  const returnTo = returnToValue && returnToValue.startsWith('/') && !returnToValue.startsWith('//') && !returnToValue.startsWith('/\\') ? returnToValue : (courseId ? '/learning/courses/' + encodeURIComponent(courseId) : '/dashboard')
+  const { session } = useSession()
+  const checkoutReturn = '/subscribe' + window.location.search
+  return <PageShell><main className="simple-page"><p className="eyebrow">{t.navPlans}</p><section className="paywall-panel"><span className="paywall-lock" aria-hidden="true">⌑</span><h1>{t.checkoutUnavailableTitle}</h1><p>{t.checkoutUnavailableDescription}</p><p>{t.backendAccessNote}</p>{!session && <Link className="button button-primary" to={'/login?returnTo=' + encodeURIComponent(checkoutReturn)}>{t.navSignIn}</Link>}<Link className="button button-secondary" to={returnTo}>{t.returnToCourse}</Link></section></main></PageShell>
 }
 
 function TutorPage() {
@@ -557,6 +606,8 @@ export function App() {
       <Route path="/learning/courses/:courseId" element={<CoursePage />} />
       <Route path="/learning/lessons/:lessonId" element={<LessonPage />} />
       <Route path="/login" element={<SignInPage />} />
+      <Route path="/dashboard" element={<DashboardPage />} />
+      <Route path="/subscribe" element={<SubscriptionPage />} />
       <Route path="/tutor" element={<TutorPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
