@@ -440,69 +440,56 @@ function CoursePage() {
 function LessonPage() {
   const { t } = useLanguage()
   const { lessonId } = useParams()
+  const { session } = useSession()
+  const location = useLocation()
   const [lesson, setLesson] = useState<Lesson | null>(null)
   const [courseId, setCourseId] = useState('')
+  const [isPreview, setIsPreview] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-
   useEffect(() => {
     let cancelled = false
-
     async function loadLesson() {
-      if (!supabase || !lessonId) {
-        setError(t.lessonServiceUnavailable)
+      if (!supabase || !lessonId) { setError(t.lessonServiceUnavailable); setLoading(false); return }
+      // Fetch metadata only until we establish the first published lesson boundary.
+      const metadata = await supabase.from('lessons').select('id,course_id,slug,title,summary,display_order,estimated_minutes').eq('id', lessonId).eq('status', 'published').not('published_at', 'is', null).maybeSingle()
+      if (cancelled) return
+      if (metadata.error || !metadata.data) { setError(t.lessonUnavailable); setLoading(false); return }
+      const [course, activeSubject, orderedLessons] = await Promise.all([
+        supabase.from('courses').select('id,subject_id').eq('id', metadata.data.course_id).eq('status', 'published').not('published_at', 'is', null).maybeSingle(),
+        supabase.from('curriculum_subjects').select('id').eq('is_active', true),
+        supabase.from('lessons').select('id,display_order').eq('course_id', metadata.data.course_id).eq('status', 'published').not('published_at', 'is', null).order('display_order'),
+      ])
+      if (cancelled) return
+      if (course.error || !course.data || activeSubject.error || !activeSubject.data?.some(item => item.id === course.data?.subject_id) || orderedLessons.error) {
+        setError(t.lessonUnavailable); setLoading(false); return
+      }
+      const preview = orderedLessons.data?.[0]?.id === metadata.data.id
+      setCourseId(metadata.data.course_id)
+      setIsPreview(preview)
+      if (!preview) {
+        setLesson({ ...metadata.data, content: null })
         setLoading(false)
         return
       }
-
-      const result = await supabase
-        .from('lessons')
-        .select('id,course_id,slug,title,summary,content,display_order,estimated_minutes')
-        .eq('id', lessonId)
-        .eq('status', 'published')
-        .not('published_at', 'is', null)
-        .maybeSingle()
-
+      // The frontend limits its content query to the first lesson. This is not a substitute for RLS/server-side authorization.
+      const content = await supabase.from('lessons').select('content').eq('id', lessonId).eq('status', 'published').not('published_at', 'is', null).maybeSingle()
       if (cancelled) return
-
-      if (result.error || !result.data) {
-        setError(t.lessonUnavailable)
-      } else {
-        setLesson(result.data)
-        setCourseId(result.data.course_id)
-      }
+      if (content.error) setError(t.lessonServiceUnavailable)
+      else setLesson({ ...metadata.data, content: content.data?.content ?? null })
       setLoading(false)
     }
-
     void loadLesson()
     return () => { cancelled = true }
   }, [lessonId, t])
-
+  const returnTo = location.pathname + location.search
   return (
-    <PageShell>
-      <main className="simple-page">
-        <p className="eyebrow">{t.lesson}</p>
-        {courseId && <p><Link to={`/learning/courses/${encodeURIComponent(courseId)}`}>{t.backToCourse}</Link></p>}
-        {loading && <p role="status">{t.loadingLesson}</p>}
-        {error && <p role="alert">{error}</p>}
-        {lesson && (
-          <article>
-            <h1>{lesson.title}</h1>
-            {lesson.summary && <p>{lesson.summary}</p>}
-            {lesson.estimated_minutes && <p>{lesson.estimated_minutes} {t.minutes}</p>}
-            {lesson.content ? (
-              <div className="lesson-content">
-                {lesson.content.split('\n').map((line, index) => (
-                  <p key={`${index}-${line.slice(0, 24)}`}>{line || '\u00a0'}</p>
-                ))}
-              </div>
-            ) : (
-              <p>{t.lessonContentMissing}</p>
-            )}
-          </article>
-        )}
-      </main>
-    </PageShell>
+    <PageShell><main className="simple-page wide-page"><p className="eyebrow">{t.lesson}</p>
+      {courseId && <p><Link to={'/learning/courses/' + encodeURIComponent(courseId)}>{t.backToCourse}</Link></p>}
+      {loading && <p role="status">{t.loadingLesson}</p>}{error && <p role="alert">{error}</p>}
+      {lesson && isPreview && <article className="lesson-article"><span className="access-chip">{t.freePreview}</span><h1>{lesson.title}</h1>{lesson.summary && <p>{lesson.summary}</p>}{lesson.estimated_minutes && <p>{lesson.estimated_minutes} {t.minutes}</p>}{lesson.content ? <div className="lesson-content">{lesson.content.split('\n').map((line, index) => <p key={index}>{line || '\u00a0'}</p>)}</div> : <p>{t.lessonContentMissing}</p>}</article>}
+      {lesson && !isPreview && <section className="paywall-panel" aria-labelledby="paywall-title"><span className="paywall-lock" aria-hidden="true">⌑</span><p className="eyebrow">{t.subscriptionRequired}</p><h1 id="paywall-title">{t.lockedTitle}</h1><p>{t.lockedDescription}</p><p>{t.backendAccessNote}</p>{!session && <Link className="button button-primary" to={'/login?returnTo=' + encodeURIComponent(returnTo)}>{t.navSignIn} ↗</Link>}<Link className="button button-primary" to={'/subscribe?courseId=' + encodeURIComponent(courseId) + '&returnTo=' + encodeURIComponent(returnTo)}>{t.checkoutAction} ↗</Link></section>}
+    </main></PageShell>
   )
 }
 
