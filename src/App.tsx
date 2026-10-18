@@ -224,6 +224,7 @@ function HomePage() {
               <div className="course-art-placeholder" role="img" aria-label={course.title + ' — ' + t.courseArtwork}><span>{t.courseArtwork}</span></div>
               <span className="principle-number">{homeSubjects.find(subject => subject.id === course.subject_id)?.name ?? t.aiCourse}</span>
               <h3>{course.title}</h3><p>{course.description ?? t.startLearningDescription}</p>
+              {!course.content_language.toLowerCase().startsWith(language) && <p className="course-language-fallback">{t.courseLanguageFallback}</p>}
               <p className="course-meta">{course.level} · {course.content_language.toUpperCase()}{course.estimated_minutes ? ' · ' + course.estimated_minutes + ' ' + t.minutes : ''}</p>
               <span className="access-chip">{t.accessPolicyPending}</span>
               <Link className="button button-primary course-action" to={'/learning/courses/' + encodeURIComponent(course.id)}>{t.viewLessons} ↗</Link>
