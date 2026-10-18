@@ -110,6 +110,7 @@ export interface TranslationSet {
   readonly paymentCancelled: string
   readonly entitlementExpired: string
   readonly checkoutConfirmed: string
+  readonly courseLanguageFallback: string
   readonly imageDescription: string
 }
 
@@ -224,6 +225,7 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
     lessonServiceUnavailable: 'The lesson service is unavailable or this lesson link is invalid.',
     lessonUnavailable: 'This lesson could not be found or is not available.',
     coursesLoadFailed: 'Unable to load courses. Please try again.',
+    courseLanguageFallback: "Course details are shown in their source language when a localized version is unavailable.",
     imageDescription: 'course artwork placeholder',
   },
   pcm: {
@@ -336,6 +338,7 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
     lessonServiceUnavailable: 'Lesson service no dey available or this lesson link no correct.',
     lessonUnavailable: 'We no fit find this lesson or e no dey available.',
     coursesLoadFailed: 'Courses no fit load. Abeg try again.',
+    courseLanguageFallback: "If translated version no dey, course details go show for the original language.",
     imageDescription: 'course image placeholder',
   },
   yo: {
@@ -448,6 +451,7 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
     lessonServiceUnavailable: 'Iṣẹ́ ìkẹ́kọ̀ọ́ kò sí tàbí ìjápọ̀ yìí kò tọ́.',
     lessonUnavailable: 'A kò rí ìkẹ́kọ̀ọ́ yìí tàbí kò sí ní ìsinsìnyí.',
     coursesLoadFailed: 'A kò lè ṣí àwọn ẹ̀kọ́. Jọ̀wọ́ tún gbìyànjú.',
+    courseLanguageFallback: "Bí ìtumọ̀ kò bá sí, a ó fi àlàyé kóòsì hàn ní èdè ìpilẹ̀ rẹ̀.",
     imageDescription: 'ààyè àwòrán ẹ̀kọ́',
   },
   ha: {
@@ -560,6 +564,7 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
     lessonServiceUnavailable: 'Ba a samun sabis ɗin darasi ko hanyar haɗin ba daidai ba ce.',
     lessonUnavailable: 'Ba a sami wannan darasi ba ko kuma babu shi yanzu.',
     coursesLoadFailed: 'An kasa loda darussa. Da fatan za a sake gwadawa.',
+    courseLanguageFallback: "Idan babu fassarar da aka tanada, za a nuna bayanan darasin da harshen asali.",
     imageDescription: 'wurin hoton darasi',
   },
   ig: {
@@ -672,6 +677,7 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
     lessonServiceUnavailable: 'Ọrụ nkuzi adịghị ma ọ bụ njikọ a ezighị ezi.',
     lessonUnavailable: 'Ahụghị nkuzi a ma ọ bụ na ọ dịghị ugbu a.',
     coursesLoadFailed: 'Enweghị ike ibunye nkuzi. Biko nwaa ọzọ.',
+    courseLanguageFallback: "Ọ bụrụ na ntụgharị asụsụ adịghị, a ga-egosi nkọwa nkuzi n'asụsụ mbụ ya.",
     imageDescription: 'ebe onyonyo nkuzi',
   },
 }
