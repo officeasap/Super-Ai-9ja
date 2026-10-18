@@ -1,0 +1,7 @@
+id,slug,name,description,display_order,is_active,created_at
+0ebdd26a-fee5-47a0-a84c-ffd986c6bdd6,natural-language-processing,Natural Language Processing (NLP),"Text processing, language technologies, tokenization, embeddings, translation, and language models.",5,true,2026-10-10 13:11:17.156713+00
+1774a9bd-052e-4c93-84f6-767bbee01c6b,applied-machine-learning-mlops,Applied Machine Learning & MLOps,"Applied machine learning workflows, evaluation, deployment, monitoring, and MLOps practices.",6,true,2026-10-10 13:11:17.156713+00
+83332555-d1d5-4d29-83fd-38599e342e7f,cybersecurity-ai-safety,Cybersecurity & AI Safety,"Cybersecurity foundations, digital safety, AI risks, responsible use, and secure AI practices.",2,true,2026-10-10 13:11:17.156713+00
+88ba56ce-7546-4712-97ca-cb5fc4981786,ai-literacy-enterprise-upskilling,AI Literacy & Enterprise Upskilling,"AI fundamentals, practical AI literacy, workplace productivity, and enterprise upskilling.",1,true,2026-10-10 13:11:17.156713+00
+a5dca443-60c5-4945-a2d9-0234194224ad,large-language-models-generative-ai,Large Language Models (LLMs) & Generative AI,"Large language models, generative AI systems, prompting, retrieval, agents, and responsible applications.",4,true,2026-10-10 13:11:17.156713+00
+c620f151-1b7c-475f-af4f-83c622991bcb,deep-learning,Deep Learning,"Neural networks, deep learning architectures, model training, and practical deep learning applications.",3,true,2026-10-10 13:11:17.156713+00
