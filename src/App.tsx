@@ -106,6 +106,28 @@ function PageShell({ children }: { children: React.ReactNode }) {
 function HomePage() {
   const { t } = useLanguage()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [homeSubjects, setHomeSubjects] = useState<Subject[]>([])
+  const [homeCourses, setHomeCourses] = useState<Course[]>([])
+  const [homeLoading, setHomeLoading] = useState(true)
+  const [homeError, setHomeError] = useState('')
+  useEffect(() => {
+    let cancelled = false
+    async function loadHomeCourses() {
+      if (!supabase) { setHomeError(t.supabaseUnavailable); setHomeLoading(false); return }
+      const [subjectsResult, coursesResult] = await Promise.all([
+        supabase.from('curriculum_subjects').select('id,name,slug,description').eq('is_active', true).order('display_order'),
+        supabase.from('courses').select('id,subject_id,slug,title,description,content_language,level,estimated_minutes').eq('status', 'published').not('published_at', 'is', null).order('display_order'),
+      ])
+      if (cancelled) return
+      if (subjectsResult.error || coursesResult.error) setHomeError(t.coursesLoadFailed)
+      else { setHomeSubjects(subjectsResult.data ?? []); setHomeCourses(coursesResult.data ?? []) }
+      setHomeLoading(false)
+    }
+    void loadHomeCourses()
+    return () => { cancelled = true }
+  }, [t])
+  const homeSubjectIds = new Set(homeSubjects.map(subject => subject.id))
+  const eligibleHomeCourses = homeCourses.filter(course => homeSubjectIds.has(course.subject_id))
 
   return (
     <PageShell>
@@ -188,6 +210,25 @@ function HomePage() {
               <Link to="/login">{t.learnerSignIn}</Link>
             </p>
           )}
+        </section>
+        <section className="catalogue-section" aria-labelledby="home-catalogue-title">
+          <div className="section-heading">
+            <div><p className="eyebrow">{t.journey}</p><h2 id="home-catalogue-title">{t.exploreCourses}</h2><p>{t.choosePath}</p></div>
+            <Link className="button button-secondary" to="/learning">{t.browseCourses} ↗</Link>
+          </div>
+          {homeLoading && <p role="status">{t.loadingCourses}</p>}
+          {homeError && <p role="alert">{homeError}</p>}
+          {!homeLoading && !homeError && eligibleHomeCourses.length === 0 && <p className="state-panel">{t.noCoursesDescription}</p>}
+          <div className="course-grid">
+            {eligibleHomeCourses.map(course => <article className="principle-card course-card" key={course.id}>
+              <div className="course-art-placeholder" role="img" aria-label={course.title + ' — ' + t.courseArtwork}><span>{t.courseArtwork}</span></div>
+              <span className="principle-number">{homeSubjects.find(subject => subject.id === course.subject_id)?.name ?? t.aiCourse}</span>
+              <h3>{course.title}</h3><p>{course.description ?? t.startLearningDescription}</p>
+              <p className="course-meta">{course.level} · {course.content_language.toUpperCase()}{course.estimated_minutes ? ' · ' + course.estimated_minutes + ' ' + t.minutes : ''}</p>
+              <span className="access-chip">{t.accessPolicyPending}</span>
+              <Link className="button button-primary course-action" to={'/learning/courses/' + encodeURIComponent(course.id)}>{t.viewLessons} ↗</Link>
+            </article>)}
+          </div>
         </section>
       </main>
     </PageShell>
