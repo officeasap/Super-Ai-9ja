@@ -463,12 +463,13 @@ function LessonPage() {
       const preview = orderedLessons.data?.[0]?.id === metadata.data.id
       setCourseId(metadata.data.course_id)
       setIsPreview(preview)
-      if (!preview) {
+      // Temporary team testing: signed-in learners can read all published lessons.
+      // Anonymous access is additionally restricted by Supabase RLS.
+      if (!preview && !session) {
         setLesson({ ...metadata.data, content: null })
         setLoading(false)
         return
       }
-      // The frontend limits its content query to the first lesson. This is not a substitute for RLS/server-side authorization.
       const content = await supabase.from('lessons').select('content').eq('id', lessonId).eq('status', 'published').not('published_at', 'is', null).maybeSingle()
       if (cancelled) return
       if (content.error) setError(t.lessonServiceUnavailable)
@@ -477,14 +478,14 @@ function LessonPage() {
     }
     void loadLesson()
     return () => { cancelled = true }
-  }, [lessonId, t])
+  }, [lessonId, t, session])
   const returnTo = location.pathname + location.search
   return (
     <PageShell><main className="simple-page wide-page"><p className="eyebrow">{t.lesson}</p>
       {courseId && <p><Link to={'/learning/courses/' + encodeURIComponent(courseId)}>{t.backToCourse}</Link></p>}
       {loading && <p role="status">{t.loadingLesson}</p>}{error && <p role="alert">{error}</p>}
-      {lesson && isPreview && <article className="lesson-article"><span className="access-chip">{t.freePreview}</span><h1>{lesson.title}</h1>{lesson.summary && <p>{lesson.summary}</p>}{lesson.estimated_minutes && <p>{lesson.estimated_minutes} {t.minutes}</p>}{lesson.content ? <div className="lesson-content">{lesson.content.split('\n').map((line, index) => <p key={index}>{line || '\u00a0'}</p>)}</div> : <p>{t.lessonContentMissing}</p>}</article>}
-      {lesson && !isPreview && <section className="paywall-panel" aria-labelledby="paywall-title"><span className="paywall-lock" aria-hidden="true">⌑</span><p className="eyebrow">{t.subscriptionRequired}</p><h1 id="paywall-title">{t.lockedTitle}</h1><p>{t.lockedDescription}</p><p>{t.backendAccessNote}</p>{!session && <Link className="button button-primary" to={'/login?returnTo=' + encodeURIComponent(returnTo)}>{t.navSignIn} ↗</Link>}<Link className="button button-primary" to={'/subscribe?courseId=' + encodeURIComponent(courseId) + '&returnTo=' + encodeURIComponent(returnTo)}>{t.checkoutAction} ↗</Link></section>}
+      {lesson && (isPreview || session) && <article className="lesson-article"><span className="access-chip">{isPreview ? t.freePreview : t.teamTestingAccess}</span><h1>{lesson.title}</h1>{lesson.summary && <p>{lesson.summary}</p>}{lesson.estimated_minutes && <p>{lesson.estimated_minutes} {t.minutes}</p>}{lesson.content ? <div className="lesson-content">{lesson.content.split('\n').map((line, index) => <p key={index}>{line || '\u00a0'}</p>)}</div> : <p>{t.lessonContentMissing}</p>}</article>}
+      {lesson && !isPreview && !session && <section className="paywall-panel" aria-labelledby="paywall-title"><span className="paywall-lock" aria-hidden="true">⌑</span><p className="eyebrow">{t.subscriptionRequired}</p><h1 id="paywall-title">{t.lockedTitle}</h1><p>{t.lockedDescription}</p><p>{t.backendAccessNote}</p>{!session && <Link className="button button-primary" to={'/login?returnTo=' + encodeURIComponent(returnTo)}>{t.navSignIn} ↗</Link>}<Link className="button button-primary" to={'/subscribe?courseId=' + encodeURIComponent(courseId) + '&returnTo=' + encodeURIComponent(returnTo)}>{t.checkoutAction} ↗</Link></section>}
     </main></PageShell>
   )
 }
