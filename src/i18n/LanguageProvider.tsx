@@ -2,6 +2,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -38,6 +39,10 @@ function getInitialLanguage(): SupportedLanguage {
 export function LanguageProvider({ children }: { readonly children: ReactNode }) {
   const [language, setLanguageState] =
     useState<SupportedLanguage>(getInitialLanguage)
+
+  useEffect(() => {
+    document.documentElement.lang = language
+  }, [language])
 
   const setLanguage = useCallback((next: SupportedLanguage) => {
     setLanguageState(next)
