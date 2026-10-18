@@ -66,12 +66,100 @@ export interface TranslationSet {
   readonly lessonServiceUnavailable: string
   readonly lessonUnavailable: string
   readonly coursesLoadFailed: string
+  readonly primaryNavigation: string
+  readonly navHome: string
+  readonly navCourses: string
+  readonly navDashboard: string
+  readonly navPlans: string
+  readonly navSignIn: string
+  readonly menuOpen: string
+  readonly menuClose: string
+  readonly accessPolicyPending: string
+  readonly openCourse: string
+  readonly freePreview: string
+  readonly accessVerificationRequired: string
+  readonly subscriptionRequired: string
+  readonly lockedTitle: string
+  readonly lockedDescription: string
+  readonly backendAccessNote: string
+  readonly checkoutAction: string
+  readonly signInTitle: string
+  readonly email: string
+  readonly password: string
+  readonly signIn: string
+  readonly signingIn: string
+  readonly signInFailed: string
+  readonly noAccountYet: string
+  readonly contactSupport: string
+  readonly dashboardTitle: string
+  readonly dashboardDescription: string
+  readonly accountLoading: string
+  readonly authRequired: string
+  readonly signOut: string
+  readonly signingOut: string
+  readonly checkoutUnavailableTitle: string
+  readonly checkoutUnavailableDescription: string
+  readonly returnToCourse: string
+  readonly publishedState: string
+  readonly freeCourse: string
+  readonly paidCourse: string
+  readonly courseAccessLabel: string
+  readonly paymentPending: string
+  readonly paymentFailed: string
+  readonly retryPayment: string
+  readonly paymentCancelled: string
+  readonly entitlementExpired: string
+  readonly checkoutConfirmed: string
   readonly imageDescription: string
 }
 
 export const translations: Record<SupportedLanguage, TranslationSet> = {
   en: {
     brand: 'SUPER-AI 9ja',
+    primaryNavigation: "Primary navigation",
+    navHome: "Home",
+    navCourses: "Courses",
+    navDashboard: "Dashboard",
+    navPlans: "Plans",
+    navSignIn: "Sign in",
+    menuOpen: "Open menu",
+    menuClose: "Close menu",
+    accessPolicyPending: "Access policy verification required",
+    openCourse: "Explore course",
+    freePreview: "Free first lesson",
+    accessVerificationRequired: "Access check required",
+    subscriptionRequired: "COURSE ACCESS",
+    lockedTitle: "Continue your learning",
+    lockedDescription: "The first published lesson is available as a preview. Further lessons stay locked until the server confirms the correct course access entitlement.",
+    backendAccessNote: "Secure checkout and server-side entitlement verification are not configured in this repository yet. No payment has been taken and this lesson remains locked.",
+    checkoutAction: "View access options",
+    signInTitle: "Sign in to continue",
+    email: "Email address",
+    password: "Password",
+    signIn: "Sign in",
+    signingIn: "Signing in…",
+    signInFailed: "Sign-in failed. Check your details and try again.",
+    noAccountYet: "Need an account?",
+    contactSupport: "Contact your learning administrator",
+    dashboardTitle: "Your learning dashboard",
+    dashboardDescription: "Your account is signed in. Course progress and paid access will appear here when the secure learning services are connected.",
+    accountLoading: "Checking your account…",
+    authRequired: "Please sign in to continue.",
+    signOut: "Sign out",
+    signingOut: "Signing out…",
+    checkoutUnavailableTitle: "Secure checkout is not connected yet",
+    checkoutUnavailableDescription: "This application does not currently expose a verified checkout creation and payment-confirmation contract. We will not simulate a purchase or unlock paid lessons without server confirmation.",
+    returnToCourse: "Return to learning",
+    publishedState: "Published",
+    freeCourse: "Free course",
+    paidCourse: "Paid course",
+    courseAccessLabel: "Course access",
+    paymentPending: "Payment pending",
+    paymentFailed: "Payment failed",
+    retryPayment: "Retry payment",
+    paymentCancelled: "Checkout cancelled",
+    entitlementExpired: "Access expired",
+    checkoutConfirmed: "Access confirmation required",
     eyebrow: 'AI SKILLS FOR REAL LIFE',
     headline: 'Build AI skills. Put them to work.',
     description: 'Explore practical AI learning designed to help you understand the technology and apply it to real problems.',
@@ -140,6 +228,50 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
   },
   pcm: {
     brand: 'SUPER-AI 9ja',
+    primaryNavigation: "Main navigation",
+    navHome: "Home",
+    navCourses: "Courses",
+    navDashboard: "Dashboard",
+    navPlans: "Plans",
+    navSignIn: "Sign in",
+    menuOpen: "Open menu",
+    menuClose: "Close menu",
+    accessPolicyPending: "Need to check access rules",
+    openCourse: "Explore course",
+    freePreview: "First lesson free",
+    accessVerificationRequired: "Need to check access",
+    subscriptionRequired: "COURSE ACCESS",
+    lockedTitle: "Continue your learning",
+    lockedDescription: "The first published lesson dey available as preview. Other lessons go remain locked until server confirm correct course access entitlement.",
+    backendAccessNote: "Secure checkout and server-side entitlement check never connect for this repo yet. No payment don happen and this lesson remain locked.",
+    checkoutAction: "See access options",
+    signInTitle: "Sign in to continue",
+    email: "Email address",
+    password: "Password",
+    signIn: "Sign in",
+    signingIn: "Signing in…",
+    signInFailed: "Sign-in no work. Check your details and try again.",
+    noAccountYet: "You need account?",
+    contactSupport: "Contact your learning administrator",
+    dashboardTitle: "Your learning dashboard",
+    dashboardDescription: "You don sign in. Course progress and paid access go show here when secure learning services connect.",
+    accountLoading: "We dey check your account…",
+    authRequired: "Abeg sign in to continue.",
+    signOut: "Sign out",
+    signingOut: "Signing out…",
+    checkoutUnavailableTitle: "Secure checkout never connect yet",
+    checkoutUnavailableDescription: "This app no get verified checkout and payment-confirmation process yet. We no go pretend say payment happen or unlock paid lessons without server confirmation.",
+    returnToCourse: "Return to learning",
+    publishedState: "Published",
+    freeCourse: "Free course",
+    paidCourse: "Paid course",
+    courseAccessLabel: "Course access",
+    paymentPending: "Payment pending",
+    paymentFailed: "Payment failed",
+    retryPayment: "Try payment again",
+    paymentCancelled: "Checkout cancelled",
+    entitlementExpired: "Access don expire",
+    checkoutConfirmed: "Access confirmation needed",
     eyebrow: 'AI SKILLS WEY FIT HELP FOR REAL LIFE',
     headline: 'Learn AI. Use am do real work.',
     description: 'Learn how AI dey work and how you fit use am solve real-life problems.',
@@ -208,6 +340,50 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
   },
   yo: {
     brand: 'SUPER-AI 9ja',
+    primaryNavigation: "Àkójọ ìrìnàjò àkọ́kọ́",
+    navHome: "Ilé",
+    navCourses: "Àwọn kóòsì",
+    navDashboard: "Pánẹ́ẹ̀lì akẹ́kọ̀ọ́",
+    navPlans: "Ètò ìsanwó",
+    navSignIn: "Wọlé",
+    menuOpen: "Ṣí àkójọ",
+    menuClose: "Pa àkójọ",
+    accessPolicyPending: "A nílò láti ṣàyẹ̀wò ìlànà ààyè",
+    openCourse: "Ṣí kóòsì",
+    freePreview: "Ẹ̀kọ́ àkọ́kọ́ lọ́fẹ̀ẹ́",
+    accessVerificationRequired: "A nílò ìjẹ́rìí ààyè",
+    subscriptionRequired: "ÀÀYÈ KÓÒSÌ",
+    lockedTitle: "Tẹ̀síwájú nínú ẹ̀kọ́ rẹ",
+    lockedDescription: "Ẹ̀kọ́ àkọ́kọ́ tí a tẹ̀ jáde wà fún àyẹ̀wò lọ́fẹ̀ẹ́. Àwọn ẹ̀kọ́ tó kù yóò wà ní títì títí olupin yóò fi jẹ́rìí àṣẹ ààyè tó yẹ.",
+    backendAccessNote: "A kò tíì so ètò ìsanwó tó ní ààbò àti ìjẹ́rìí ààyè olupin pọ̀ mọ́ ohun èlò yìí. A kò gba ìsanwó, ẹ̀kọ́ yìí sì ṣì wà ní títì.",
+    checkoutAction: "Wo àwọn ọ̀nà ààyè",
+    signInTitle: "Wọlé láti tẹ̀síwájú",
+    email: "Àdírẹ́sì í-meèlì",
+    password: "Ọ̀rọ̀ aṣínà",
+    signIn: "Wọlé",
+    signingIn: "Ó ń wọlé…",
+    signInFailed: "Wíwọlé kò ṣiṣẹ́. Ṣàyẹ̀wò àlàyé rẹ kí o sì tún gbìyànjú.",
+    noAccountYet: "Ṣé o nílò àkọọ́lẹ̀?",
+    contactSupport: "Kàn sí alábòójútó ẹ̀kọ́ rẹ",
+    dashboardTitle: "Pánẹ́ẹ̀lì ẹ̀kọ́ rẹ",
+    dashboardDescription: "O ti wọlé. Ìlọsíwájú kóòsì àti ààyè ìsanwó yóò hàn níbí nígbà tí iṣẹ́ ẹ̀kọ́ tó ní ààbò bá ti sopọ̀.",
+    accountLoading: "A ń ṣàyẹ̀wò àkọọ́lẹ̀ rẹ…",
+    authRequired: "Jọ̀wọ́ wọlé láti tẹ̀síwájú.",
+    signOut: "Jáde",
+    signingOut: "Ó ń jáde…",
+    checkoutUnavailableTitle: "A kò tíì so ètò ìsanwó tó ní ààbò pọ̀",
+    checkoutUnavailableDescription: "Ohun èlò yìí kò tíì ní ìlànà ìsanwó àti ìjẹ́rìí ìsanwó tó jẹ́rìí. A kò ní ṣe bí ẹni pé o ti sanwó tàbí ṣí ẹ̀kọ́ láìsí ìjẹ́rìí olupin.",
+    returnToCourse: "Padà sí ẹ̀kọ́",
+    publishedState: "A tẹ̀ jáde",
+    freeCourse: "Kóòsì ọ̀fẹ́",
+    paidCourse: "Kóòsì ìsanwó",
+    courseAccessLabel: "Ààyè kóòsì",
+    paymentPending: "Ìsanwó ń dúró",
+    paymentFailed: "Ìsanwó kò ṣiṣẹ́",
+    retryPayment: "Tún gbìyànjú ìsanwó",
+    paymentCancelled: "A fagilé ìsanwó",
+    entitlementExpired: "Ààyè ti parí",
+    checkoutConfirmed: "A nílò ìjẹ́rìí ààyè",
     eyebrow: 'OGBON AI FUN IYE GIDI',
     headline: 'Kọ́ ẹ̀kọ́ AI. Lo ó fún iṣẹ́ gidi.',
     description: 'Kọ́ ẹ̀kọ́ AI tó wúlò, lóye bí ìmọ̀ ẹ̀rọ náà ṣe ń ṣiṣẹ́, kí o sì lò ó láti yanjú ìṣòro gidi.',
@@ -276,6 +452,50 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
   },
   ha: {
     brand: 'SUPER-AI 9ja',
+    primaryNavigation: "Babban kewayawa",
+    navHome: "Gida",
+    navCourses: "Darussa",
+    navDashboard: "Allon ɗalibi",
+    navPlans: "Tsare-tsare",
+    navSignIn: "Shiga",
+    menuOpen: "Buɗe menu",
+    menuClose: "Rufe menu",
+    accessPolicyPending: "Ana buƙatar tabbatar da damar shiga",
+    openCourse: "Duba darasi",
+    freePreview: "Darasi na farko kyauta",
+    accessVerificationRequired: "Ana buƙatar duba damar shiga",
+    subscriptionRequired: "DAMAR DARASI",
+    lockedTitle: "Ci gaba da karatu",
+    lockedDescription: "Darasi na farko da aka wallafa yana samuwa don gwaji kyauta. Sauran darussa za su kasance a kulle har sai uwar garke ta tabbatar da izinin shiga da ya dace.",
+    backendAccessNote: "Ba a haɗa ingantaccen biyan kuɗi da tabbatar da izinin shiga daga uwar garke a wannan manhaja ba tukuna. Ba a karɓi kuɗi ba, kuma darasin yana kulle.",
+    checkoutAction: "Duba hanyoyin samun dama",
+    signInTitle: "Shiga don ci gaba",
+    email: "Adireshin imel",
+    password: "Kalmar sirri",
+    signIn: "Shiga",
+    signingIn: "Ana shiga…",
+    signInFailed: "Shiga bai yi nasara ba. Duba bayananka sannan a sake gwadawa.",
+    noAccountYet: "Kana buƙatar asusu?",
+    contactSupport: "Tuntuɓi mai kula da karatunka",
+    dashboardTitle: "Allon karatunka",
+    dashboardDescription: "Ka shiga asusunka. Ci gaban darasi da damar biyan kuɗi za su bayyana nan idan an haɗa amintattun ayyukan karatu.",
+    accountLoading: "Ana duba asusunka…",
+    authRequired: "Da fatan za a shiga don ci gaba.",
+    signOut: "Fita",
+    signingOut: "Ana fita…",
+    checkoutUnavailableTitle: "Ba a haɗa amintaccen biyan kuɗi ba tukuna",
+    checkoutUnavailableDescription: "Wannan manhaja ba ta da ingantacciyar hanyar ƙirƙirar biyan kuɗi da tabbatar da biyan kuɗi tukuna. Ba za mu ƙirƙiri biyan kuɗi na ƙarya ko buɗe darussan da aka biya ba tare da tabbacin uwar garke ba.",
+    returnToCourse: "Koma karatu",
+    publishedState: "An wallafa",
+    freeCourse: "Darasi kyauta",
+    paidCourse: "Darasi mai kuɗi",
+    courseAccessLabel: "Damar darasi",
+    paymentPending: "Ana jiran biyan kuɗi",
+    paymentFailed: "Biyan kuɗi ya gaza",
+    retryPayment: "Sake gwada biyan kuɗi",
+    paymentCancelled: "An soke biyan kuɗi",
+    entitlementExpired: "Damar shiga ta ƙare",
+    checkoutConfirmed: "Ana buƙatar tabbatar da damar shiga",
     eyebrow: 'KWAREWAR AI DON RAYUWA',
     headline: 'Koyi AI. Yi ilimi zuwa aiki.',
     description: 'Koyi yadda AI ke aiki da yadda za ka yi amfani da shi wajen magance matsalolin gaske.',
@@ -344,6 +564,50 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
   },
   ig: {
     brand: 'SUPER-AI 9ja',
+    primaryNavigation: "Nchọgharị mbụ",
+    navHome: "Ụlọ",
+    navCourses: "Nkuzi",
+    navDashboard: "Dashboard nwa akwụkwọ",
+    navPlans: "Atụmatụ",
+    navSignIn: "Banye",
+    menuOpen: "Mepee menu",
+    menuClose: "Mechie menu",
+    accessPolicyPending: "A ga-enyocha ikike ịbanye",
+    openCourse: "Lelee nkuzi",
+    freePreview: "Nkuzi mbụ bụ n'efu",
+    accessVerificationRequired: "A chọrọ nkwenye ikike ịbanye",
+    subscriptionRequired: "IKIKE NKUZI",
+    lockedTitle: "Gaa n'ihu n'ịmụ ihe",
+    lockedDescription: "Nkuzi mbụ e bipụtara dị maka nnwale n'efu. Nkuzi ndị ọzọ ga-anọgide kpọchiri ruo mgbe sava kwadoro ikike ịbanye kwesịrị ekwesị.",
+    backendAccessNote: "Ejikọbeghị usoro ịkwụ ụgwọ echekwara na nkwenye ikike sava na ngwa a. Enweghị ego e nara, nkuzi a ka kpọchiri.",
+    checkoutAction: "Lee ụzọ nweta ikike",
+    signInTitle: "Banye ka ị gaa n'ihu",
+    email: "Adreesị email",
+    password: "Okwuntughe",
+    signIn: "Banye",
+    signingIn: "A na-abanye…",
+    signInFailed: "Nbanye adaghị. Lelee nkọwa gị ma nwalee ọzọ.",
+    noAccountYet: "Ị chọrọ akaụntụ?",
+    contactSupport: "Kpọtụrụ onye na-elekọta mmụta gị",
+    dashboardTitle: "Dashboard mmụta gị",
+    dashboardDescription: "Ị banyela. Ọganihu nkuzi na ikike ịkwụ ụgwọ ga-apụta ebe a mgbe ejikọtara ọrụ mmụta echekwara.",
+    accountLoading: "A na-enyocha akaụntụ gị…",
+    authRequired: "Biko banye ka ị gaa n'ihu.",
+    signOut: "Pụọ",
+    signingOut: "A na-apụ…",
+    checkoutUnavailableTitle: "Ejikọbeghị ịkwụ ụgwọ echekwara",
+    checkoutUnavailableDescription: "Ngwa a enweghị usoro akwadoro maka ịmalite ịkwụ ụgwọ na nkwenye ịkwụ ụgwọ ugbu a. Anyị agaghị eme ka ọ dị ka a kwụọla ụgwọ ma ọ bụ meghee nkuzi akwụ ụgwọ na-enweghị nkwenye sava.",
+    returnToCourse: "Laghachi n'ịmụ ihe",
+    publishedState: "E bipụtara",
+    freeCourse: "Nkuzi n'efu",
+    paidCourse: "Nkuzi akwụ ụgwọ",
+    courseAccessLabel: "Ikike nkuzi",
+    paymentPending: "A na-eche ịkwụ ụgwọ",
+    paymentFailed: "Ịkwụ ụgwọ dara",
+    retryPayment: "Nwaa ịkwụ ụgwọ ọzọ",
+    paymentCancelled: "Akagbuola ịkwụ ụgwọ",
+    entitlementExpired: "Ikike agwụla",
+    checkoutConfirmed: "A chọrọ nkwenye ikike",
     eyebrow: 'NKÀ AI MAKA NDỤ EZIGBO',
     headline: 'Mụta AI. Jiri ya rụọ ọrụ.',
     description: 'Mụta otú AI si arụ ọrụ na otu i nwere ike isi jiri ya dozie nsogbu ndị dị adị.',
