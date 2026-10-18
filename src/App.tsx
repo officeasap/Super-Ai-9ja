@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
-import { Link, Route, Routes, useParams } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { Link, Route, Routes, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import type { Session } from '@supabase/supabase-js'
 
 import { LANGUAGE_REGISTRY } from './i18n/languages'
 import { useLanguage } from './i18n/LanguageProvider'
@@ -34,33 +35,55 @@ type Lesson = {
   estimated_minutes: number | null
 }
 
+function useSession() {
+  const [session, setSession] = useState<Session | null>(null)
+  const [loading, setLoading] = useState(Boolean(supabase))
+  useEffect(() => {
+    if (!supabase) { setLoading(false); return }
+    let active = true
+    void supabase.auth.getSession().then(({ data }) => { if (active) { setSession(data.session); setLoading(false) } })
+    const { data } = supabase.auth.onAuthStateChange((_event, next) => { if (active) { setSession(next); setLoading(false) } })
+    return () => { active = false; data.subscription.unsubscribe() }
+  }, [])
+  return { session, loading }
+}
+
 function SiteHeader() {
   const { language, setLanguage, t } = useLanguage()
-
+  const location = useLocation()
+  const { session } = useSession()
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [coursesOpen, setCoursesOpen] = useState(false)
+  const headerRef = useRef<HTMLElement>(null)
+  const active = (path: string) => location.pathname === path || (path !== '/' && location.pathname.startsWith(path))
+  useEffect(() => {
+    const key = (event: KeyboardEvent) => { if (event.key === 'Escape') { setMenuOpen(false); setCoursesOpen(false) } }
+    const pointer = (event: PointerEvent) => { if (headerRef.current && !headerRef.current.contains(event.target as Node)) { setMenuOpen(false); setCoursesOpen(false) } }
+    document.addEventListener('keydown', key)
+    document.addEventListener('pointerdown', pointer)
+    return () => { document.removeEventListener('keydown', key); document.removeEventListener('pointerdown', pointer) }
+  }, [])
+  useEffect(() => { setMenuOpen(false); setCoursesOpen(false) }, [location.pathname, location.search])
+  const accountPath = session ? '/dashboard' : '/login?returnTo=' + encodeURIComponent(location.pathname + location.search)
   return (
-    <header className="site-header">
-      <Link className="brand" to="/" aria-label={`${t.brand} ${t.home}`}>
-        <span className="brand-mark" aria-hidden="true">S</span>
-        <span>{t.brand}</span>
-      </Link>
+    <header className="site-header" ref={headerRef}>
+      <Link className="brand" to="/" aria-label={t.brand + ' — ' + t.home}><span className="brand-mark" aria-hidden="true">S</span><span>{t.brand}</span></Link>
+      <nav className="desktop-nav" aria-label={t.primaryNavigation}>
+        <Link className={'nav-link' + (active('/') ? ' is-active' : '')} to="/">{t.navHome}</Link>
+        <div className="nav-dropdown"><button type="button" className={'nav-link nav-dropdown-trigger' + (active('/learning') ? ' is-active' : '')} aria-expanded={coursesOpen} aria-haspopup="true" onClick={() => setCoursesOpen(v => !v)}>{t.navCourses}<span aria-hidden="true">⌄</span></button>
+          {coursesOpen && <div className="header-menu course-menu" role="menu"><Link role="menuitem" to="/learning">{t.catalogue}<span aria-hidden="true">↗</span></Link><Link role="menuitem" to="/tutor">{t.tutor}<span aria-hidden="true">↗</span></Link></div>}
+        </div>
+        <Link className={'nav-link' + (active('/dashboard') ? ' is-active' : '')} to={accountPath}>{t.navDashboard}</Link>
+        <Link className={'nav-link' + (active('/subscribe') ? ' is-active' : '')} to="/subscribe">{t.navPlans}</Link>
+      </nav>
       <div className="header-actions">
-        <label className="language-control">
-          <span>{t.language}</span>
-          <select
-            aria-label={t.language}
-            value={language}
-            onChange={(event) =>
-              setLanguage(event.target.value as typeof language)
-            }
-          >
-            {LANGUAGE_REGISTRY.map((item) => (
-              <option key={item.code} value={item.code}>
-                {item.nativeName}
-              </option>
-            ))}
-          </select>
-        </label>
+        <label className="language-control"><span>{t.language}</span><select aria-label={t.language} value={language} onChange={event => setLanguage(event.target.value as typeof language)}>{LANGUAGE_REGISTRY.map(item => <option key={item.code} value={item.code}>{item.nativeName}</option>)}</select></label>
+        <Link className="button button-secondary header-account" to={accountPath}>{session ? t.navDashboard : t.navSignIn}</Link>
+        <button className="header-menu-toggle" type="button" aria-label={menuOpen ? t.menuClose : t.menuOpen} aria-expanded={menuOpen} aria-controls="mobile-navigation" onClick={() => setMenuOpen(value => !value)}><span className={'menu-icon' + (menuOpen ? ' is-open' : '')} aria-hidden="true"><span/><span/><span/></span><span className="menu-toggle-label">{menuOpen ? t.menuClose : t.menuOpen}</span></button>
       </div>
+      {menuOpen && <nav id="mobile-navigation" className="mobile-drawer" aria-label={t.primaryNavigation}>
+        <Link className={active('/') ? 'is-active' : ''} to="/">{t.navHome}</Link><Link className={active('/learning') ? 'is-active' : ''} to="/learning">{t.catalogue}</Link><Link className={active('/tutor') ? 'is-active' : ''} to="/tutor">{t.tutor}</Link><Link className={active('/dashboard') ? 'is-active' : ''} to={accountPath}>{t.navDashboard}</Link><Link className={active('/subscribe') ? 'is-active' : ''} to="/subscribe">{t.navPlans}</Link><Link to={accountPath}>{session ? t.navDashboard : t.navSignIn}</Link>
+      </nav>}
     </header>
   )
 }
