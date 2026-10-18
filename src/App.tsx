@@ -316,15 +316,8 @@ function LearningPage() {
             const subject = subjects.find((item) => item.id === course.subject_id)
             return (
               <article className="principle-card" key={course.id}>
-                <div
-                  className="course-art-placeholder"
-                  role="img"
-                  aria-label={`${course.title} ${t.courseArtwork.toLowerCase()}`}
-                  style={{
-                    backgroundImage: `linear-gradient(180deg, rgba(4,25,17,.02), rgba(4,25,17,.82)), url("/images/courses/${course.slug}.webp")`,
-                  }}
-                >
-                  <span>{t.courseArtwork} · {course.slug}</span>
+                <div className="course-art-placeholder" role="img" aria-label={course.title + ' — ' + t.courseArtwork}>
+                  <span>{t.courseArtwork}</span>
                 </div>
                 <span className="principle-number">{subject?.name ?? t.aiCourse}</span>
                 <h2>{course.title}</h2>
