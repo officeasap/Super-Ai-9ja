@@ -1,0 +1,190 @@
+/* ==========================================================================
+   SUPER-AI 9ja — UI REPAIR
+   Loaded LAST (see main.tsx). !important is used deliberately on the hard
+   requirements because design-system.css and cathedral-signature.css contain
+   many competing rules. Tune everything from the variables below.
+   ========================================================================== */
+
+:root {
+  --ui-card: #062118;
+  --ui-nav: #256145;
+  --ui-cta: #256145;
+  --ui-header-bg: #062118;
+  --ui-radius-btn: 16px;
+  --ui-gutter: clamp(20px, 5vw, 72px);
+  --ui-max: 1280px;
+  --ui-header-h: 76px;
+  --ui-text: #f2f0e5;
+  --ui-text-muted: #c3d4c8;
+  --ui-accent: #8fe0a8;
+  --ui-press-rest: 0 5px 0 rgba(0, 0, 0, .5), 0 12px 20px rgba(0, 0, 0, .28);
+  --ui-press-down: inset 0 5px 12px rgba(0, 0, 0, .6), inset 0 1px 2px rgba(0, 0, 0, .5);
+}
+
+/* 1. CONTENT STAYS INSIDE THE SITE BODY -------------------------------- */
+html { scroll-padding-top: calc(var(--ui-header-h) + 16px); }
+
+.app-shell { overflow: visible !important; }   /* never trap the sticky header */
+
+.home-main {
+  box-sizing: border-box;
+  width: min(100%, var(--ui-max));
+  margin-inline: auto;
+  padding-inline: var(--ui-gutter);
+}
+.home-main > .hero { padding-inline: 0; }       /* avoid double side padding */
+
+.home-section-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 24px;
+}
+.home-section-count { color: var(--ui-accent) !important; white-space: nowrap; }
+
+.pathway-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(14px, 2vw, 24px);
+}
+@media (max-width: 900px) {
+  .pathway-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* header/footer bars stay full width, their content aligns with the page */
+.site-header,
+.site-footer {
+  box-sizing: border-box;
+  padding-inline: max(var(--ui-gutter), calc((100% - var(--ui-max)) / 2 + var(--ui-gutter)));
+}
+
+.simple-page,
+.sa9-content-page { box-sizing: border-box; max-width: 100%; }
+h1, h2, h3, p, li { overflow-wrap: break-word; }
+
+/* 2. CARDS: #062118 EVERYWHERE ----------------------------------------- */
+.pathway-card, .pathway-card:hover,
+.pathway-card--understand, .pathway-card--practice, .pathway-card--apply,
+.principle-card, .principle-card:hover,
+.course-card, .course-card:hover,
+.account-card,
+.sa9-principle-card,
+.lesson-content {
+  background: var(--ui-card) !important;
+  background-image: none !important;
+  color: var(--ui-text) !important;
+}
+
+.pathway-card h3,
+.principle-card h2,
+.course-card h2,
+.account-card :is(h1, h2),
+.sa9-principle-card :is(h2, h3),
+.lesson-content :is(h1, h2, h3) {
+  color: var(--ui-text) !important;
+  text-shadow: none !important;
+  opacity: 1 !important;
+}
+
+.pathway-card p,
+.principle-card p,
+.course-card p,
+.account-card p,
+.sa9-principle-card p,
+.lesson-content p {
+  color: var(--ui-text-muted) !important;
+}
+
+.pathway-card__number,
+.principle-number { color: var(--ui-accent) !important; }
+
+/* remove the dark slab behind the card header row and the ringed icon */
+.pathway-card__top {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding-inline: 0 !important;
+}
+.pathway-card__symbol {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  color: var(--ui-accent) !important;
+}
+
+/* card links become proper buttons instead of text on a dark slab */
+.pathway-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 18px;
+  background: var(--ui-cta) !important;
+  background-image: none !important;
+  color: var(--ui-text) !important;
+  text-decoration: none;
+}
+
+/* 3. HEADER: STICKY, SOLID, AUTHORITATIVE ------------------------------ */
+.site-header {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1000 !important;
+  min-height: var(--ui-header-h);
+  background: var(--ui-header-bg) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  border-bottom: 1px solid rgba(143, 224, 168, .22) !important;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, .45), 0 14px 28px rgba(0, 0, 0, .4) !important;
+}
+
+.brand-mark { border: 0 !important; }
+
+/* header menu buttons: #256145 in EVERY state, including hover */
+.site-header :is(.nav-link, .header-menu-toggle, .header-menu a, .desktop-nav a, .header-account-link, .header-start),
+.site-header :is(.nav-link, .header-menu-toggle, .header-menu a, .desktop-nav a, .header-account-link, .header-start):is(:hover, :focus, :focus-visible, :active, [aria-current="page"]) {
+  background: var(--ui-nav) !important;
+  background-image: none !important;
+  color: var(--ui-text) !important;
+  filter: none !important;
+  opacity: 1 !important;
+  min-height: 44px;
+  padding-inline: 18px;
+  text-decoration: none !important;
+}
+.site-header :is(.nav-link, .header-menu-toggle, .header-menu a, .desktop-nav a, .header-account-link, .header-start):hover {
+  transform: none !important;     /* hover changes nothing */
+}
+
+/* 4. BUTTONS: NO RINGS, 16px RADIUS, DEEP PRESSED ---------------------- */
+.button, .button-primary, .button-secondary,
+button:not(.text-button),
+.pathway-card__link,
+.site-header :is(.nav-link, .header-menu a, .desktop-nav a, .header-account-link, .header-start) {
+  border: 0 !important;
+  border-radius: var(--ui-radius-btn) !important;
+  outline: none !important;
+  box-shadow: var(--ui-press-rest) !important;
+  transition: transform 120ms ease, box-shadow 120ms ease !important;
+}
+
+.button:active, .button-primary:active, .button-secondary:active,
+button:not(.text-button):active,
+.pathway-card__link:active,
+.site-header :is(.nav-link, .header-menu a, .desktop-nav a, .header-account-link, .header-start):active {
+  transform: translateY(3px) !important;
+  box-shadow: var(--ui-press-down) !important;
+}
+
+/* keyboard focus: dark inner line instead of a white ring (no colour change) */
+.button:focus-visible, .button-primary:focus-visible, .button-secondary:focus-visible,
+button:not(.text-button):focus-visible,
+.pathway-card__link:focus-visible,
+.site-header :is(.nav-link, .header-menu a, .desktop-nav a, .header-account-link, .header-start):focus-visible {
+  outline: none !important;
+  box-shadow: var(--ui-press-rest), inset 0 0 0 3px rgba(0, 0, 0, .55) !important;
+}
+
+button:disabled { box-shadow: none !important; transform: none !important; }

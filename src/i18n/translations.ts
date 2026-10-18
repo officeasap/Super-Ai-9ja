@@ -75,7 +75,7 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
     eyebrow: 'AI SKILLS FOR REAL LIFE',
     headline: 'Build AI skills. Put them to work.',
     description: 'Explore practical AI learning designed to help you understand the technology and apply it to real problems.',
-    courses: 'Explore learning',
+    courses: 'COURSES',
     tutor: 'AI tutor',
     getStarted: 'Start learning',
     language: 'Language',

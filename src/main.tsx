@@ -6,6 +6,7 @@ import { App } from './App'
 import { LanguageProvider } from './i18n/LanguageProvider'
 import './styles/design-system.css'
 import './styles/cathedral-signature.css'
+import './styles/ui-repair.css'
 
 const root = document.getElementById('root')
 
