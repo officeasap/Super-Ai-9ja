@@ -104,7 +104,7 @@ function PageShell({ children }: { children: React.ReactNode }) {
 }
 
 function HomePage() {
-  const { t } = useLanguage()
+  const { language, t } = useLanguage()
   const [menuOpen, setMenuOpen] = useState(false)
   const [homeSubjects, setHomeSubjects] = useState<Subject[]>([])
   const [homeCourses, setHomeCourses] = useState<Course[]>([])
@@ -236,7 +236,7 @@ function HomePage() {
 }
 
 function LearningPage() {
-  const { t } = useLanguage()
+  const { language, t } = useLanguage()
   const [subjects, setSubjects] = useState<Subject[]>([])
   const [courses, setCourses] = useState<Course[]>([])
   const [loading, setLoading] = useState(true)
@@ -322,6 +322,7 @@ function LearningPage() {
                 <span className="principle-number">{subject?.name ?? t.aiCourse}</span>
                 <h2>{course.title}</h2>
                 <p>{course.description ?? t.startLearningDescription}</p>
+                {!course.content_language.toLowerCase().startsWith(language) && <p className="course-language-fallback">{t.courseLanguageFallback}</p>}
                 <p>
                   {course.level} · {course.content_language.toUpperCase()}
                   {course.estimated_minutes ? ` · ${course.estimated_minutes} min` : ''}
@@ -342,7 +343,7 @@ function LearningPage() {
 }
 
 function CoursePage() {
-  const { t } = useLanguage()
+  const { language, t } = useLanguage()
   const { courseId } = useParams()
   const [course, setCourse] = useState<Course | null>(null)
   const [lessons, setLessons] = useState<Lesson[]>([])
@@ -409,6 +410,7 @@ function CoursePage() {
           <>
             <h1>{course.title}</h1>
             <p>{course.description}</p>
+            {!course.content_language.toLowerCase().startsWith(language) && <p className="course-language-fallback">{t.courseLanguageFallback}</p>}
             <p>{course.level} · {course.content_language.toUpperCase()}</p>
             <h2>{t.lessons}</h2>
             {lessons.length === 0 && <p>{t.noLessons}</p>}
