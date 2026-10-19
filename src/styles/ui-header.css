@@ -255,3 +255,17 @@
   }
 }
 
+/* SUPER-AI 9ja: About dropdown */
+.nav-dropdown { position: relative; display: flex; align-items: center; }
+.nav-dropdown__button { cursor: pointer; font: inherit; border: 0; display: inline-flex; align-items: center; gap: 6px; }
+.nav-dropdown__panel { display: none; }
+.nav-dropdown.is-open .nav-dropdown__panel { display: flex; flex-direction: column; gap: 6px; }
+@media (min-width: 901px) {
+  .nav-dropdown__panel { position: absolute; top: calc(100% + 8px); left: 0; min-width: 220px; padding: 8px; border-radius: 12px; background: #082A20; box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45); z-index: 50; }
+}
+@media (max-width: 900px) {
+  .nav-dropdown { flex-direction: column; align-items: stretch; width: 100%; }
+  .nav-dropdown__button { min-height: 48px; justify-content: space-between; }
+  .nav-dropdown__panel { padding-left: 12px; margin-top: 8px; }
+  .nav-dropdown__panel a { min-height: 48px; display: flex; align-items: center; }
+}

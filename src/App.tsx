@@ -1,10 +1,37 @@
-import { useEffect, useState } from 'react'
-import { Link, Route, Routes, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { Suspense, lazy, useEffect, useRef, useState } from 'react'
+import { Link, Route, Routes, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
 import { LANGUAGE_REGISTRY } from './i18n/languages'
 import { useLanguage } from './i18n/LanguageProvider'
 import { supabase, supabaseConfigured } from './lib/supabase'
 import LessonVideo from './components/curriculum/LessonVideo'
+
+const HowItWorksPage = lazy(() => import('./pages/HowItWorksPage'))
+const MentorshipPage = lazy(() => import('./pages/MentorshipPage'))
+const StudentOutcomesPage = lazy(() => import('./pages/StudentOutcomesPage'))
+const WhyChooseUsPage = lazy(() => import('./pages/WhyChooseUsPage'))
+const WhatIsSiPage = lazy(() => import('./pages/WhatIsSiPage'))
+const OurStoryPage = lazy(() => import('./pages/OurStoryPage'))
+
+const ABOUT_LINKS: { to: string; label: string }[] = [
+  { to: '/about', label: 'About us' },
+  { to: '/how-it-works', label: 'How It Works' },
+  { to: '/mentorship', label: 'Mentorship' },
+  { to: '/student-outcomes', label: 'Student Outcomes' },
+  { to: '/why-choose-us', label: 'Why Choose Us' },
+  { to: '/what-is-si', label: 'What Is SI' },
+  { to: '/our-story', label: 'Our Story' },
+]
+
+function SubPage({ children }: { children: React.ReactNode }) {
+  return (
+    <PageShell>
+      <Suspense fallback={<main className="sa9-content-page"><p role="status">Loading…</p></main>}>
+        {children}
+      </Suspense>
+    </PageShell>
+  )
+}
 
 type Subject = {
   id: string
@@ -222,6 +249,31 @@ function SiteHeader() {
   const { language, setLanguage, t } = useLanguage()
   const [menuOpen, setMenuOpen] = useState(false)
   const closeMenu = () => setMenuOpen(false)
+  const { pathname } = useLocation()
+  const [aboutOpen, setAboutOpen] = useState(false)
+  const aboutRef = useRef<HTMLDivElement>(null)
+  const aboutActive = ABOUT_LINKS.some((item) => item.to === pathname)
+  const closeAll = () => {
+    setMenuOpen(false)
+    setAboutOpen(false)
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+  }
+
+  useEffect(() => {
+    if (!aboutOpen) return undefined
+    const onDown = (event: MouseEvent) => {
+      if (aboutRef.current && !aboutRef.current.contains(event.target as Node)) setAboutOpen(false)
+    }
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setAboutOpen(false)
+    }
+    document.addEventListener('mousedown', onDown)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onDown)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [aboutOpen])
 
   useEffect(() => {
     if (!menuOpen) return undefined
@@ -261,9 +313,23 @@ function SiteHeader() {
         <Link className="nav-link nav-link--courses" to="/learning" onClick={() => { closeMenu(); window.scrollTo({ top: 0, left: 0, behavior: 'auto' }) }}>
           COURSES
         </Link>
-        <Link className="nav-link" to="/about" onClick={() => { closeMenu(); window.scrollTo({ top: 0, left: 0, behavior: 'auto' }) }}>About</Link>
+        <div className={`nav-dropdown${aboutOpen ? ' is-open' : ''}`} ref={aboutRef}>
+          <button
+            type="button"
+            className={`nav-link nav-dropdown__button${aboutActive ? ' is-active' : ''}`}
+            aria-expanded={aboutOpen}
+            aria-controls="about-menu"
+            onClick={() => setAboutOpen((open) => !open)}
+          >
+            About <span aria-hidden="true">{aboutOpen ? '▴' : '▾'}</span>
+          </button>
+          <div id="about-menu" className="nav-dropdown__panel">
+            {ABOUT_LINKS.map((item) => (
+              <Link key={item.to} className="nav-link" to={item.to} onClick={closeAll}>{item.label}</Link>
+            ))}
+          </div>
+        </div>
         <Link className="nav-link" to="/contact" onClick={() => { closeMenu(); window.scrollTo({ top: 0, left: 0, behavior: 'auto' }) }}>Contact</Link>
-        <Link className="nav-link" to="/dashboard" onClick={() => { closeMenu(); window.scrollTo({ top: 0, left: 0, behavior: 'auto' }) }}>Dashboard</Link>
         <Link className="nav-link nav-link--menu-signin" to="/login" onClick={() => { closeMenu(); window.scrollTo({ top: 0, left: 0, behavior: 'auto' }) }}>
           Sign In <span aria-hidden="true">↗</span>
         </Link>
@@ -1247,6 +1313,12 @@ export function App() {
       <Route path="/login" element={<SignInPage />} />
       <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/about" element={<AboutPage />} />
+      <Route path="/how-it-works" element={<SubPage><HowItWorksPage /></SubPage>} />
+      <Route path="/mentorship" element={<SubPage><MentorshipPage /></SubPage>} />
+      <Route path="/student-outcomes" element={<SubPage><StudentOutcomesPage /></SubPage>} />
+      <Route path="/why-choose-us" element={<SubPage><WhyChooseUsPage /></SubPage>} />
+      <Route path="/what-is-si" element={<SubPage><WhatIsSiPage /></SubPage>} />
+      <Route path="/our-story" element={<SubPage><OurStoryPage /></SubPage>} />
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/tutor" element={<TutorPage />} />
       <Route path="*" element={<NotFoundPage />} />
