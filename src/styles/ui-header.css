@@ -269,3 +269,6 @@
   .nav-dropdown__panel { padding-left: 12px; margin-top: 8px; }
   .nav-dropdown__panel a { min-height: 48px; display: flex; align-items: center; }
 }
+
+/* SUPER-AI 9ja: featured card title */
+.home-featured .course-card h3 { margin: 0 0 8px; font-size: 1.25rem; line-height: 1.2; color: inherit; }
