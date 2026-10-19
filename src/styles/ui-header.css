@@ -272,3 +272,7 @@
 
 /* SUPER-AI 9ja: featured card title */
 .home-featured .course-card h3 { margin: 0 0 8px; font-size: 1.25rem; line-height: 1.2; color: inherit; }
+
+/* SUPER-AI 9ja: register page */
+.account-card--register { border-top: 4px solid #b5d1b9; }
+.account-hint { font-size: 0.9rem; opacity: 0.8; margin: 0; }

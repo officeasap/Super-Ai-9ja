@@ -986,11 +986,12 @@ function SignInPage() {
   const { t } = useLanguage()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const [mode, setMode] = useState<"login" | "register">(
-    searchParams.get("mode") === "register" ? "register" : "login",
-  )
+  const { pathname } = useLocation()
+  const mode: "login" | "register" =
+    pathname === "/register" || searchParams.get("mode") === "register" ? "register" : "login"
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState("")
   const [error, setError] = useState("")
@@ -1023,6 +1024,8 @@ function SignInPage() {
 
     try {
       if (mode === "register") {
+        if (password.length < 8) throw new Error("Use a password of at least 8 characters.")
+        if (password !== confirmPassword) throw new Error("The two passwords do not match.")
         const { data, error: authError } = await supabase.auth.signUp({
           email: email.trim(),
           password,
@@ -1054,7 +1057,7 @@ function SignInPage() {
   return (
     <PageShell>
       <main className="simple-page account-page">
-        <section className="account-card">
+        <section className={`account-card${mode === "register" ? " account-card--register" : ""}`}>
           <p className="eyebrow">{t.account}</p>
           <h1>{mode === "register" ? "Create your learner account" : "Welcome back"}</h1>
           <p>
@@ -1083,11 +1086,27 @@ function SignInPage() {
               id="account-password"
               type="password"
               autoComplete={mode === "register" ? "new-password" : "current-password"}
-              minLength={6}
+              minLength={mode === "register" ? 8 : 6}
               required
               value={password}
               onChange={(event) => setPassword(event.target.value)}
             />
+
+            {mode === "register" && (
+              <>
+                <label htmlFor="account-confirm">Confirm password</label>
+                <input
+                  id="account-confirm"
+                  type="password"
+                  autoComplete="new-password"
+                  minLength={8}
+                  required
+                  value={confirmPassword}
+                  onChange={(event) => setConfirmPassword(event.target.value)}
+                />
+                <p className="account-hint">Use at least 8 characters.</p>
+              </>
+            )}
 
             {error && <p className="form-message form-error" role="alert">{error}</p>}
             {message && <p className="form-message form-success" role="status">{message}</p>}
@@ -1107,7 +1126,11 @@ function SignInPage() {
               className="text-button"
               type="button"
               onClick={() => {
-                setMode((current) => current === "register" ? "login" : "register")
+                navigate(
+                  (mode === "register" ? "/login" : "/register") +
+                    (searchParams.get("next") ? "?next=" + encodeURIComponent(searchParams.get("next") as string) : ""),
+                  { replace: true },
+                )
                 setError("")
                 setMessage("")
               }}
@@ -1310,7 +1333,8 @@ export function App() {
       <Route path="/learning" element={<LearningPage />} />
       <Route path="/learning/courses/:courseId" element={<CoursePage />} />
       <Route path="/learning/lessons/:lessonId" element={<LessonPage />} />
-      <Route path="/login" element={<SignInPage />} />
+      <Route path="/login" element={<SignInPage key="login" />} />
+      <Route path="/register" element={<SignInPage key="register" />} />
       <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/how-it-works" element={<SubPage><HowItWorksPage /></SubPage>} />
