@@ -1,0 +1,252 @@
+/* ==========================================================================
+   SUPER-AI 9ja — UI FINAL  (imported LAST in main.tsx)
+   Self-contained. Supersedes UI-REPAIR-RECONCILE-V1 if that was applied.
+   ========================================================================== */
+:root {
+  --ui-card: #062118;
+  --ui-nav: #256145;
+  --ui-cta: #256145;
+  --ui-header-bg: #062118;
+  --ui-gutter: clamp(20px, 5vw, 72px);
+  --ui-max: 1200px;
+  --ui-header-h: 76px;
+  --ui-text: #f2f0e5;
+}
+
+/* 1. STICKY: nothing above the header may be a scroll container ----------- */
+html, body, #root {
+  overflow-x: clip !important;      /* clip = no scroll container */
+  overflow-y: visible !important;
+  height: auto !important;
+}
+.app-shell {
+  overflow: visible !important;
+  contain: none !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding-inline: 0 !important;     /* header/footer stay full-bleed */
+}
+.app-shell > main,
+.home-main { overflow: visible !important; }
+
+.site-header {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1000 !important;
+  box-sizing: border-box;
+  width: 100% !important;
+  margin: 0 !important;
+  transform: none !important;
+  background: var(--ui-header-bg) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  padding-inline: max(var(--ui-gutter), calc((100% - var(--ui-max)) / 2 + var(--ui-gutter))) !important;
+}
+.site-footer {
+  box-sizing: border-box;
+  padding-inline: max(var(--ui-gutter), calc((100% - var(--ui-max)) / 2 + var(--ui-gutter))) !important;
+}
+html { scroll-padding-top: calc(var(--ui-header-h) + 16px); }
+
+/* 2. Page content gets its own gutters, inside the site body ------------- */
+.home-main,
+.simple-page,
+.sa9-content-page {
+  box-sizing: border-box;
+  padding-inline: var(--ui-gutter) !important;
+}
+
+/* 3. Header buttons: no ring; language control is ONE button ------------- */
+.site-header .site-nav .nav-link,
+.site-header .header-actions .nav-link,
+.site-header .header-menu-toggle,
+.site-header .language-control select {
+  border: 0 !important;
+}
+.site-header .language-control {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+.site-header .language-control select {
+  padding: 8px 34px 8px 14px !important;
+}
+
+/* 4. Card buttons: visible fill, no underline ---------------------------- */
+.home-pathways .pathway-card .pathway-card__link {
+  background: var(--ui-cta) !important;
+  color: var(--ui-text) !important;
+  text-decoration: none !important;
+}
+.pathway-card a.button,
+.principle-card a.button { text-decoration: none !important; }
+.principle-card a.button-primary   { color: #041a20 !important; }
+.principle-card a.button-secondary { color: var(--ui-text) !important; }
+
+/* 5. overflow-wrap:anywhere can shrink header items to one letter/line --- */
+.site-header a,
+.site-header button,
+.site-header span,
+.site-header label { overflow-wrap: normal; }
+
+
+/* ==========================================================================
+   UI-FINAL-NO-SLAB
+   design-system.css has `.home-pathways [class*="pathway"]` which also matches
+   the wrapper `.pathway-grid` and paints it #062118. The cards must stand
+   alone on the page background, so every wrapper around them is transparent.
+   ========================================================================== */
+.home-pathways,
+.home-pathways div.pathway-grid,
+.home-pathways .home-section-heading {
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+.home-pathways div.pathway-grid {
+  padding: 0 !important;
+  gap: clamp(14px, 2vw, 24px);
+}
+
+/* ==========================================================================
+   UI-FINAL-PANELS — home panels use the global card colour #062118, white text
+   ========================================================================== */
+.home-manifesto,
+.home-course-cta,       /* optional */
+.home-tutor-strip {     /* optional */
+  background-color: #062118 !important;
+  background-image: none !important;
+  border: 1px solid rgb(34 211 197 / 22%) !important;
+}
+
+/* The Super-AI Method: every font white */
+.home-manifesto,
+.home-manifesto :is(h1, h2, h3, p, span, strong, li) {
+  color: #ffffff !important;
+  text-shadow: none !important;
+  opacity: 1 !important;
+}
+
+/* Course CTA + tutor strip: white text, buttons keep their own colours */
+.home-course-cta__content :is(h2, p, .eyebrow),    /* optional */
+.home-course-cta__index span,                        /* optional */
+.home-course-cta__stamp :is(span, strong),           /* optional */
+.home-tutor-strip :is(h2, p, .eyebrow) {             /* optional */
+  color: #ffffff !important;
+  text-shadow: none !important;
+  opacity: 1 !important;
+}
+
+/* ==========================================================================
+   UI-FINAL-TUTOR-CARD — "Want guidance as you learn?" becomes a real card.
+   The strip had a dark fill but its old padding was `top 34-57px, sides 0,
+   bottom 10px`, so the text sat on the card edge and nothing was shaped.
+   ========================================================================== */
+.home-tutor-strip {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(20px, 4vw, 48px);
+  margin-block: clamp(24px, 4vw, 44px) clamp(28px, 5vw, 64px);
+  padding: clamp(28px, 4.5vw, 52px) clamp(24px, 5vw, 60px) !important;
+  border: 1px solid rgb(143 224 168 / 18%) !important;
+  border-radius: 24px !important;
+  background: #062118 !important;
+  background-image: none !important;
+  box-shadow: 0 6px 0 rgb(0 0 0 / 45%), 0 24px 44px rgb(0 0 0 / 32%) !important;
+}
+
+/* soft decorative circles, same language as the three pathway cards */
+.home-tutor-strip::before,
+.home-tutor-strip::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.home-tutor-strip::before {
+  right: -90px;
+  bottom: -150px;
+  width: 340px;
+  height: 340px;
+  border: 1px solid rgb(143 224 168 / 14%);
+}
+.home-tutor-strip::after {
+  right: 20px;
+  bottom: -90px;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgb(37 97 69 / 38%), transparent 70%);
+}
+
+/* text block */
+.home-tutor-strip > div {
+  flex: 1 1 360px;
+  min-width: 0;
+  max-width: 680px;
+}
+.home-tutor-strip .eyebrow {
+  margin: 0 0 14px;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+}
+.home-tutor-strip .eyebrow::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #8fe0a8;
+  box-shadow: 0 0 0 5px rgb(143 224 168 / 14%);
+}
+.home-tutor-strip h2 {
+  margin: 0;
+  font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+  line-height: 1.12;
+}
+.home-tutor-strip > div > p:last-child {
+  max-width: 560px;
+  margin: 14px 0 0;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+/* call-to-action button: same #256145 as the pathway buttons */
+.home-tutor-strip .button {
+  flex: 0 0 auto;
+  min-height: 54px;
+  padding: 0 28px !important;
+  border: 0 !important;
+  border-radius: 16px !important;
+  background: #256145 !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  font-size: 1rem;
+  white-space: nowrap;
+}
+.home-tutor-strip .button:is(:hover, :focus, :focus-visible, :active) {
+  background: #256145 !important;
+  color: #ffffff !important;
+}
+
+@media (max-width: 760px) {
+  .home-tutor-strip {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 22px;
+    border-radius: 20px !important;
+  }
+  .home-tutor-strip > div { flex: 0 0 auto; max-width: none; }
+  .home-tutor-strip .button { width: 100%; }
+}

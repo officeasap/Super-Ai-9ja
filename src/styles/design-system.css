@@ -3176,3 +3176,294 @@ body,
 /* ===================================================================
    END SA9-TARGETED-HOMEPAGE-HEADER-FIX
    =================================================================== */
+
+/* ===================================================================
+   SA9-CLEAN-CONTAINMENT-V1
+   Single authoritative override block, targeting the real class names
+   present in src/App.tsx:
+     .home-pathways (section wrapper)
+     .pathway-card, .pathway-card--understand / --practice / --apply
+     .nav-link, .language-control, .header-menu-toggle
+     .site-header, .app-shell, .home-section-heading
+   Earlier appended blocks in this file use !important. To win without
+   deleting them (which would risk unrelated regressions), this block
+   also uses !important where necessary. Every use is annotated.
+   =================================================================== */
+
+:root {
+  --sa9-card-bg: #062118;
+  --sa9-card-ink: #e8f5ee;
+  --sa9-nav-bg: #256145;
+  --sa9-nav-ink: #f3f7fb;
+  --sa9-header-bg: #071321;
+  --sa9-focus-gold: #f4c66a;
+  --sa9-header-h: 84px;
+}
+
+/* ---- Shared content container ---- */
+/* Neutralizes padding-inline: 0 !important added at line ~1342. */
+.app-shell {
+  padding-inline: clamp(16px, 4vw, 32px) !important;
+  box-sizing: border-box;
+}
+
+/* Every direct child main/section respects the container. */
+.home-main,
+.simple-page,
+.sa9-content-page,
+.home-pathways,
+.home-manifesto,
+.home-course-cta,
+.home-tutor-strip {
+  width: 100% !important;
+  max-width: 1200px;
+  margin-inline: auto !important;
+  box-sizing: border-box;
+}
+
+/* Section heading: kicker left, count right, both inside the container. */
+.home-section-heading {
+  display: flex !important;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: clamp(16px, 3vw, 40px);
+  flex-wrap: wrap;
+  width: 100%;
+  margin-bottom: clamp(20px, 3vw, 32px);
+}
+
+.home-section-heading > div {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.home-section-count {
+  flex: 0 0 auto;
+  color: var(--sa9-focus-gold);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* ---- Card color: unified #062118 across every card ---- */
+.home-pathways article,
+.home-pathways [class*="card"],
+.home-pathways [class*="pathway"],
+.pathway-card,
+.pathway-card--understand,
+.pathway-card--practice,
+.pathway-card--apply,
+.principle-card,
+.dashboard-grid .principle-card,
+.sa9-principle-card {
+  background-color: var(--sa9-card-bg) !important;
+  background-image: none !important;
+  color: var(--sa9-card-ink) !important;
+  border-color: rgb(34 211 197 / 22%) !important;
+}
+
+.pathway-card h3,
+.pathway-card p,
+.pathway-card a,
+.pathway-card__number,
+.pathway-card__symbol,
+.home-pathways article h3,
+.home-pathways article p,
+.home-pathways article a,
+.principle-card h2,
+.principle-card h3,
+.principle-card p,
+.sa9-principle-card h2,
+.sa9-principle-card h3,
+.sa9-principle-card p {
+  color: var(--sa9-card-ink) !important;
+}
+
+.pathway-card a,
+.principle-card a {
+  color: #7dffd6 !important;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ---- Header buttons: unified #256145, no hover color change ---- */
+.site-header .site-nav .nav-link,
+.site-header .header-actions .nav-link,
+.site-header .language-control,
+.site-header .language-control select,
+.site-header .header-menu-toggle {
+  background-color: var(--sa9-nav-bg) !important;
+  color: var(--sa9-nav-ink) !important;
+  border: 1px solid rgb(125 255 214 / 22%) !important;
+  border-radius: 16px !important;
+  padding: 8px 14px !important;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+/* Locked: hover does not change background-color. Only the pressed feel. */
+.site-header .site-nav .nav-link:hover,
+.site-header .site-nav .nav-link:focus,
+.site-header .site-nav .nav-link:focus-visible,
+.site-header .site-nav .nav-link:active,
+.site-header .header-actions .nav-link:hover,
+.site-header .header-actions .nav-link:focus,
+.site-header .header-actions .nav-link:focus-visible,
+.site-header .header-actions .nav-link:active,
+.site-header .header-menu-toggle:hover,
+.site-header .header-menu-toggle:focus,
+.site-header .header-menu-toggle:focus-visible,
+.site-header .header-menu-toggle:active {
+  background-color: var(--sa9-nav-bg) !important;
+  color: var(--sa9-nav-ink) !important;
+}
+
+.site-header .language-control > span {
+  background-color: transparent !important;
+  color: var(--sa9-nav-ink) !important;
+  padding: 0 6px 0 0;
+}
+
+/* ---- Remove the white ring on buttons and links ---- */
+button:focus,
+button:focus-visible,
+a:focus,
+a:focus-visible,
+[role="button"]:focus,
+[role="button"]:focus-visible,
+.button:focus,
+.button:focus-visible,
+.nav-link:focus,
+.nav-link:focus-visible,
+.header-menu-toggle:focus,
+.header-menu-toggle:focus-visible,
+.pathway-card__link:focus,
+.pathway-card__link:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Keyboard accessibility preserved: gold (not white) outline on form fields. */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--sa9-focus-gold) !important;
+  outline-offset: 2px !important;
+  box-shadow: none !important;
+}
+
+/* ---- Buttons: 16px radius, deep pressed feel ---- */
+.button,
+.button-primary,
+.button-secondary,
+.nav-link,
+.header-menu-toggle,
+.pathway-card__link,
+.text-button {
+  border-radius: 16px !important;
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease,
+    background-color 120ms ease !important;
+}
+
+.button,
+.button-primary,
+.button-secondary,
+.pathway-card__link {
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.35), 0 12px 22px rgba(0, 0, 0, 0.22) !important;
+}
+
+.button:active,
+.button-primary:active,
+.button-secondary:active,
+.pathway-card__link:active,
+.nav-link:active,
+.header-menu-toggle:active {
+  transform: translateY(2px) !important;
+  box-shadow:
+    inset 0 4px 10px rgba(0, 0, 0, 0.5),
+    0 2px 0 rgba(0, 0, 0, 0.30) !important;
+}
+
+/* Remove any rectangular dark background behind button labels. */
+.button > *,
+.nav-link > *,
+.header-menu-toggle > * {
+  background: transparent !important;
+}
+
+/* ---- Header: sticky and authoritative, overriding cathedral position:relative ---- */
+html {
+  scroll-padding-top: calc(var(--sa9-header-h) + 12px);
+}
+
+.site-header {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 200 !important;
+  min-height: var(--sa9-header-h);
+  background: var(--sa9-header-bg) !important;
+  border-bottom: 1px solid rgb(148 181 207 / 28%) !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.28) !important;
+  backdrop-filter: none !important;
+}
+
+/* Any ancestor that breaks sticky is neutralized. */
+.app-shell,
+main,
+.home-main,
+.simple-page {
+  overflow: visible !important;
+}
+
+/* ---- Viewport containment ---- */
+html, body, #root {
+  overflow-x: hidden !important;
+  max-width: 100vw;
+}
+
+img, svg, video, canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+h1, h2, h3, h4, p, a, button, label, span {
+  overflow-wrap: anywhere;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 900px) {
+  .home-section-heading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .home-section-count {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 600px) {
+  :root { --sa9-header-h: 72px; }
+  .site-header {
+    padding-block: 10px !important;
+    gap: 8px;
+  }
+  .pathway-card {
+    padding: 18px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button, .button-primary, .button-secondary, .nav-link,
+  .header-menu-toggle, .pathway-card__link, .text-button {
+    transition: none !important;
+  }
+}
+
+/* ===================================================================
+   END SA9-CLEAN-CONTAINMENT-V1
+   =================================================================== */

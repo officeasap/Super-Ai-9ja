@@ -4,6 +4,7 @@ import { Link, Route, Routes, useNavigate, useParams, useSearchParams } from 're
 import { LANGUAGE_REGISTRY } from './i18n/languages'
 import { useLanguage } from './i18n/LanguageProvider'
 import { supabase, supabaseConfigured } from './lib/supabase'
+import LessonVideo from './components/curriculum/LessonVideo'
 
 type Subject = {
   id: string
@@ -34,6 +35,11 @@ type Lesson = {
   estimated_minutes: number | null
 }
 
+
+type LessonVideoRecord = {
+  url: string
+  position: number | null
+}
 
 const PAGE_COPY = {
   en: {
@@ -214,25 +220,59 @@ function getPageCopy(language: string) {
 
 function SiteHeader() {
   const { language, setLanguage, t } = useLanguage()
+  const [menuOpen, setMenuOpen] = useState(false)
+  const closeMenu = () => setMenuOpen(false)
+
+  useEffect(() => {
+    if (!menuOpen) return undefined
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMenuOpen(false)
+    }
+    const onResize = () => {
+      if (window.innerWidth > 900) setMenuOpen(false)
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    window.addEventListener('resize', onResize)
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+      window.removeEventListener('resize', onResize)
+    }
+  }, [menuOpen])
 
   return (
     <header className="site-header">
-      <Link className="brand" to="/" aria-label={`${t.brand} ${t.home}`}>
-        <span className="brand-mark" aria-hidden="true">S</span>
-        <span className="brand-name">{t.brand}</span>
+      <Link
+        className="brand"
+        to="/"
+        aria-label={`${t.brand} ${t.home}`}
+        onClick={closeMenu}
+      >
+        <img className="brand-logo" src="/super-ai-9ja-logo.png" alt="" />
       </Link>
 
-      <nav className="site-nav" aria-label="Main navigation">
-        <Link className="nav-link" to="/">{t.home}</Link>
-        <Link className="nav-link nav-link--courses" to="/learning">
+      <nav
+        id="site-nav"
+        className={`site-nav${menuOpen ? ' is-open' : ''}`}
+        aria-label="Main navigation"
+      >
+        <Link className="nav-link" to="/" onClick={() => { closeMenu(); window.scrollTo({ top: 0, left: 0, behavior: 'auto' }) }}>{t.home}</Link>
+        <Link className="nav-link nav-link--courses" to="/learning" onClick={() => { closeMenu(); window.scrollTo({ top: 0, left: 0, behavior: 'auto' }) }}>
           COURSES
         </Link>
-        <Link className="nav-link" to="/about">About</Link>
-        <Link className="nav-link" to="/contact">Contact</Link>
-        <Link className="nav-link" to="/dashboard">Dashboard</Link>
+        <Link className="nav-link" to="/about" onClick={() => { closeMenu(); window.scrollTo({ top: 0, left: 0, behavior: 'auto' }) }}>About</Link>
+        <Link className="nav-link" to="/contact" onClick={() => { closeMenu(); window.scrollTo({ top: 0, left: 0, behavior: 'auto' }) }}>Contact</Link>
+        <Link className="nav-link" to="/dashboard" onClick={() => { closeMenu(); window.scrollTo({ top: 0, left: 0, behavior: 'auto' }) }}>Dashboard</Link>
+        <Link className="nav-link nav-link--menu-signin" to="/login" onClick={() => { closeMenu(); window.scrollTo({ top: 0, left: 0, behavior: 'auto' }) }}>
+          Sign In <span aria-hidden="true">↗</span>
+        </Link>
       </nav>
 
       <div className="header-actions">
+        <Link className="nav-link nav-link--signin" to="/login">
+          Sign In <span aria-hidden="true">↗</span>
+        </Link>
         <label className="language-control">
           <span>{t.language}</span>
           <select
@@ -249,10 +289,23 @@ function SiteHeader() {
             ))}
           </select>
         </label>
-        <Link className="nav-link nav-link--signin" to="/login">
-          Sign In <span aria-hidden="true">↗</span>
-        </Link>
+        <button
+          type="button"
+          className="site-burger"
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={menuOpen}
+          aria-controls="site-nav"
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          <span className="site-burger__bar" aria-hidden="true" />
+          <span className="site-burger__bar" aria-hidden="true" />
+          <span className="site-burger__bar" aria-hidden="true" />
+        </button>
       </div>
+
+      {menuOpen && (
+        <div className="site-backdrop" aria-hidden="true" onClick={closeMenu} />
+      )}
     </header>
   )
 }
@@ -759,6 +812,9 @@ function LessonPage() {
   const { t } = useLanguage()
   const { lessonId } = useParams()
   const [lesson, setLesson] = useState<Lesson | null>(null)
+  const [videoUrl, setVideoUrl] = useState('')
+  const [videoLoading, setVideoLoading] = useState(false)
+  const [videoError, setVideoError] = useState('')
   const [courseId, setCourseId] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -788,6 +844,27 @@ function LessonPage() {
       } else {
         setLesson(result.data)
         setCourseId(result.data.course_id)
+        setVideoUrl('')
+        setVideoError('')
+        setVideoLoading(true)
+
+        const videoResult = await supabase
+          .from('lesson_videos')
+          .select('url,position')
+          .eq('lesson_id', result.data.id)
+          .order('position', { ascending: true, nullsFirst: false })
+          .limit(1)
+          .maybeSingle()
+
+        if (cancelled) return
+
+        if (videoResult.error) {
+          setVideoError('We could not load this lesson video. Please try again later.')
+        } else {
+          const video = videoResult.data as LessonVideoRecord | null
+          if (video?.url) setVideoUrl(video.url)
+        }
+        setVideoLoading(false)
       }
       setLoading(false)
     }
@@ -808,6 +885,21 @@ function LessonPage() {
             <h1>{lesson.title}</h1>
             {lesson.summary && <p>{lesson.summary}</p>}
             {lesson.estimated_minutes && <p>{lesson.estimated_minutes} {t.minutes}</p>}
+            <section className="lesson-video-section" aria-labelledby="lesson-video-heading">
+              <h2 id="lesson-video-heading">Lesson video</h2>
+              {videoLoading && <p role="status">Loading lesson video…</p>}
+              {!videoLoading && videoError && <p role="alert">{videoError}</p>}
+              {!videoLoading && !videoError && videoUrl && (
+                <LessonVideo
+                  url={videoUrl}
+                  title={lesson.title}
+                  onError={() => setVideoError('The video could not be played. Check your connection or open the video link again later.')}
+                />
+              )}
+              {!videoLoading && !videoError && !videoUrl && (
+                <p>This lesson does not have a video available yet.</p>
+              )}
+            </section>
             {lesson.content ? (
               <div className="lesson-content">
                 {lesson.content.split('\n').map((line, index) => (

@@ -1,0 +1,76 @@
+/* SUPER-AI 9ja — global floating-card surface system */
+:root {
+  --sa9-card-surface: #062118;
+  --sa9-card-inner: #0b3225;
+  --sa9-card-shadow: #164938;
+  --sa9-card-ambient: #58766c;
+  --sa9-card-radius: 22px;
+  --sa9-card-depth:
+    -7px -7px 18px rgba(88, 118, 108, 0.13),
+    9px 13px 25px rgba(0, 0, 0, 0.34),
+    0 20px 38px rgba(22, 73, 56, 0.25),
+    inset 1px 1px 0 rgba(88, 118, 108, 0.20),
+    inset -2px -2px 7px rgba(11, 50, 37, 0.85);
+}
+
+/* Shared shell targets: semantic articles and explicit card classes.
+   Buttons, links, and card sub-elements are deliberately excluded. */
+:where(main) :is(
+  article,
+  [class~="card"],
+  [class$="-card"],
+  [class*="-card--"],
+  .pathway-card
+) {
+  background-color: var(--sa9-card-surface) !important;
+  background-image: none;
+  color: #e6f0eb;
+  border: 0 !important;
+  border-radius: var(--sa9-card-radius) !important;
+  box-shadow: var(--sa9-card-depth) !important;
+  isolation: isolate;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
+}
+
+:where(main) :is(
+  article,
+  [class~="card"],
+  [class$="-card"],
+  [class*="-card--"],
+  .pathway-card
+) :is(h1, h2, h3, h4, p, li, small, label) {
+  overflow-wrap: anywhere;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  :where(main) :is(
+    article,
+    [class~="card"],
+    [class$="-card"],
+    [class*="-card--"],
+    .pathway-card
+  ):hover {
+    transform: translateY(-3px);
+    box-shadow:
+      -9px -9px 21px rgba(88, 118, 108, 0.16),
+      11px 17px 30px rgba(0, 0, 0, 0.38),
+      0 24px 42px rgba(22, 73, 56, 0.31),
+      inset 1px 1px 0 rgba(88, 118, 108, 0.22),
+      inset -2px -2px 7px rgba(11, 50, 37, 0.88) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(main) :is(
+    article,
+    [class~="card"],
+    [class$="-card"],
+    [class*="-card--"],
+    .pathway-card
+  ) {
+    transition: none !important;
+  }
+}
