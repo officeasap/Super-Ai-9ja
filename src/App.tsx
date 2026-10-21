@@ -1,3 +1,6 @@
+import { LearningPage } from './pages/LearningPage'
+import { CoursePage } from './pages/CoursePage'
+import PaymentReturnPage from './pages/PaymentReturnPage'
 import { Suspense, lazy, useEffect, useRef, useState } from 'react'
 import { Link, Route, Routes, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
@@ -33,24 +36,6 @@ function SubPage({ children }: { children: React.ReactNode }) {
   )
 }
 
-type Subject = {
-  id: string
-  name: string
-  slug: string
-  description: string | null
-}
-
-type Course = {
-  id: string
-  subject_id: string
-  slug: string
-  title: string
-  description: string | null
-  content_language: string
-  level: string
-  estimated_minutes: number | null
-}
-
 type Lesson = {
   id: string
   course_id: string
@@ -62,11 +47,6 @@ type Lesson = {
   estimated_minutes: number | null
 }
 
-
-type LessonVideoRecord = {
-  url: string
-  position: number | null
-}
 
 const PAGE_COPY = {
   en: {
@@ -459,8 +439,10 @@ function HomePage() {
             </div>
           </div>
 
-          <aside className="visual-panel visual-panel--home"
-            aria-label={t.learningLoop}>
+          <aside
+            className="visual-panel visual-panel--home"
+            aria-label={t.learningLoop}
+          >
             <div className="visual-panel-top">
               <span className="panel-label">{t.learningLoop}</span>
               <span className="panel-index">SUPER-AI / 9JA</span>
@@ -473,7 +455,7 @@ function HomePage() {
             <div className="home-core">
               <span className="home-core__spark" aria-hidden="true">✳</span>
               <strong>AI</strong>
-              <span>LEARN · BUILD · APPLY</span>
+              <span>{t.knowledgePractice}</span>
             </div>
 
             <span className="home-orbit-label home-orbit-label--top">
@@ -490,38 +472,31 @@ function HomePage() {
             </span>
 
             <div className="panel-footer">
-              <span>IDEAS INTO CAPABILITY</span>
+              <span>{t.learningLoop}</span>
               <span className="panel-signal" aria-hidden="true">● ● ●</span>
             </div>
           </aside>
         </section>
 
-        <section className="home-manifesto" aria-label="Our approach">
+        <section className="home-manifesto" aria-label={t.principles}>
           <div className="home-manifesto__lead">
-            <span className="manifesto-index">THE SUPER-AI METHOD</span>
-            <h2>Understand the technology. Build the skill. Use it in real life.</h2>
+            <span className="manifesto-index">{t.learningLoop}</span>
+            <h2>{t.headline}</h2>
           </div>
           <div className="home-manifesto__note">
             <span className="manifesto-cross" aria-hidden="true">✳</span>
-            <p>
-              Learning should move beyond watching and reading. Explore
-              structured lessons, strengthen your understanding, and keep
-              moving towards practical capability.
-            </p>
+            <p>{t.description}</p>
           </div>
         </section>
 
         <section className="home-pathways" aria-labelledby="pathways-title">
           <div className="home-section-heading">
             <div>
-              <p className="eyebrow">YOUR NEXT MOVE</p>
-              <h2 id="pathways-title">Turn curiosity into capability.</h2>
-              <p className="home-section-lead">
-                A clear path from understanding AI to putting your knowledge
-                into practice.
-              </p>
+              <p className="eyebrow">{t.journey}</p>
+              <h2 id="pathways-title">{t.principles}</h2>
+              <p className="home-section-lead">{t.choosePath}</p>
             </div>
-            <span className="home-section-count">03 / PRINCIPLES</span>
+            <span className="home-section-count">03 / {t.learningLoop}</span>
           </div>
 
           <div className="pathway-grid">
@@ -549,326 +524,33 @@ function HomePage() {
         <section className="home-course-cta" aria-labelledby="course-cta-title">
           <div className="home-course-cta__index" aria-hidden="true">
             <span>SAI</span>
-            <span>LEARNING SYSTEM</span>
+            <span>{t.catalogue}</span>
           </div>
           <div className="home-course-cta__content">
-            <p className="eyebrow">THE COURSE CATALOGUE</p>
-            <h2 id="course-cta-title">Your next skill starts here.</h2>
-            <p>
-              Explore available AI courses, choose a learning path, and open
-              published lessons at your own pace.
-            </p>
+            <p className="eyebrow">{t.catalogue}</p>
+            <h2 id="course-cta-title">{t.exploreCourses}</h2>
+            <p>{t.startLearningDescription}</p>
             <Link className="button button-primary" to="/learning">
-              Explore COURSES <span aria-hidden="true">↗</span>
+              {t.browseCourses} <span aria-hidden="true">↗</span>
             </Link>
           </div>
           <div className="home-course-cta__stamp" aria-hidden="true">
-            <span>LEARN</span>
+            <span>{t.learn}</span>
             <strong>∞</strong>
-            <span>GROW</span>
+            <span>{t.grow}</span>
           </div>
         </section>
 
-        <section className="home-tutor-strip">
+        <section className="home-tutor-strip" aria-labelledby="tutor-strip-title">
           <div>
-            <p className="eyebrow">LEARNING SUPPORT</p>
-            <h2>Want guidance as you learn?</h2>
-            <p>
-              Visit the AI tutor page to see the current learning-support
-              experience and its available capabilities.
-            </p>
+            <p className="eyebrow">{t.companion}</p>
+            <h2 id="tutor-strip-title">{t.tutorTitle}</h2>
+            <p>{t.tutorDescription}</p>
           </div>
           <Link className="button button-secondary" to="/tutor">
-            Meet the AI tutor <span aria-hidden="true">↗</span>
+            {t.tutor} <span aria-hidden="true">↗</span>
           </Link>
         </section>
-      </main>
-    </PageShell>
-  )
-}
-
-
-function LearningPage() {
-  const { language, t } = useLanguage()
-
-  const copy = getPageCopy(language);const [subjects, setSubjects] = useState<Subject[]>([])
-  const [courses, setCourses] = useState<Course[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-  const [courseSearch, setCourseSearch] = useState('')
-  const [selectedSubjectId, setSelectedSubjectId] = useState('all')
-  const [attempt, setAttempt] = useState(0)
-
-  useEffect(() => {
-    let cancelled = false
-
-    async function loadCourses() {
-      if (!supabase) {
-        setError(copy.unavailable)
-        setLoading(false)
-        return
-      }
-
-      const [subjectResult, courseResult] = await Promise.all([
-        supabase
-          .from('curriculum_subjects')
-          .select('id,name,slug,description')
-          .eq('is_active', true)
-          .order('display_order'),
-        supabase
-          .from('courses')
-          .select('id,subject_id,slug,title,description,content_language,level,estimated_minutes')
-          .eq('status', 'published')
-          .not('published_at', 'is', null)
-          .order('display_order'),
-      ])
-
-      if (cancelled) return
-
-      if (subjectResult.error || courseResult.error) {
-        setError(t.coursesLoadFailed)
-      } else {
-        setSubjects(subjectResult.data ?? [])
-        setCourses(courseResult.data ?? [])
-      }
-      setLoading(false)
-    }
-
-    void loadCourses()
-    return () => { cancelled = true }
-  }, [t, attempt])
-
-  const activeSubjectIds = new Set(subjects.map((subject) => subject.id))
-
-
-  const visibleCourses = courses.filter((course) => activeSubjectIds.has(course.subject_id))
-
-
-  const normalizedSearch = courseSearch.trim().toLocaleLowerCase()
-
-
-  const filteredCourses = visibleCourses.filter((course) => {
-
-
-    const matchesSubject = selectedSubjectId === 'all' || course.subject_id === selectedSubjectId
-
-
-    const searchableText = [course.title, course.description, course.level, course.content_language, course.slug].filter(Boolean).join(' ').toLocaleLowerCase()
-
-
-    return matchesSubject && (!normalizedSearch || searchableText.includes(normalizedSearch))
-
-
-  })
-
-  return (
-    <PageShell>
-      <main className="simple-page">
-        <p className="eyebrow">{t.journey}</p>
-        <h1>{copy.courses}</h1>
-          <div className="course-discovery" role="search" aria-label="Find courses">
-            <label className="course-discovery__search">
-              <span>Search courses</span>
-              <input
-                type="search"
-                value={courseSearch}
-                onChange={(event) => setCourseSearch(event.target.value)}
-                placeholder="Try AI, safety, deep learning…"
-                autoComplete="off"
-              />
-            </label>
-            <div className="course-discovery__filters" aria-label="Filter by learning track">
-              <button
-                type="button"
-                className={selectedSubjectId === 'all' ? 'is-active' : ''}
-                aria-pressed={selectedSubjectId === 'all'}
-                onClick={() => setSelectedSubjectId('all')}
-              >
-                All tracks
-              </button>
-              {subjects.map((subject) => {
-                const details = subject as unknown as {
-                  title?: string
-                  name?: string
-                  slug?: string
-                }
-                const label = details.title || details.name || details.slug || 'Learning track'
-                return (
-                  <button
-                    type="button"
-                    key={subject.id}
-                    className={selectedSubjectId === subject.id ? 'is-active' : ''}
-                    aria-pressed={selectedSubjectId === subject.id}
-                    onClick={() => setSelectedSubjectId(subject.id)}
-                  >
-                    {label.replace(/-/g, ' ')}
-                  </button>
-                )
-              })}
-            </div>
-            <p className="course-discovery__count" aria-live="polite">
-              {filteredCourses.length} {filteredCourses.length === 1 ? 'course' : 'courses'} found
-            </p>
-            {(courseSearch || selectedSubjectId !== 'all') && (
-              <button
-                type="button"
-                className="course-discovery__clear"
-                onClick={() => {
-                  setCourseSearch('')
-                  setSelectedSubjectId('all')
-                }}
-              >
-                Clear filters
-              </button>
-            )}
-          </div>
-        <p>{t.choosePath}</p>
-        <p><Link to="/">{t.backHome}</Link></p>
-
-        {!supabaseConfigured && !loading && (
-          <section className="principle-card" role="alert">
-            <h2>{copy.unavailable}</h2>
-            <p>{t.coursesLoadFailed}</p>
-            <button className="button button-secondary" type="button" onClick={() => { setError(''); setLoading(true); setAttempt((value) => value + 1) }}>{copy.retry}</button>
-          </section>
-        )}
-        {loading && <p role="status">{t.loadingCourses}</p>}
-        {error && supabaseConfigured && (
-          <section className="principle-card" role="alert">
-            <h2>{copy.unavailable}</h2>
-            <p>{error}</p>
-            <button className="button button-secondary" type="button" onClick={() => { setError(''); setLoading(true); setAttempt((value) => value + 1) }}>{copy.retry}</button>
-          </section>
-        )}
-
-        {!loading && !error && filteredCourses.length === 0 && (
-          <section>
-            <h2>{t.noCourses}</h2>
-            <p>{t.noCoursesDescription}</p>
-          </section>
-        )}
-
-        <section className="course-grid" aria-label={t.catalogue}>
-          {filteredCourses.map((course) => {
-            const subject = subjects.find((item) => item.id === course.subject_id)
-            return (
-              <article className="course-card" key={course.id}>
-                <div
-                  className="course-art-placeholder"
-                  role="img"
-                  aria-label={`${course.title} ${t.courseArtwork.toLowerCase()}`}
-                  style={{
-                    backgroundImage: `linear-gradient(180deg, rgba(4,25,17,.02), rgba(4,25,17,.82)), url("/images/courses/${course.slug}.webp")`,
-                  }}
-                >
-                  <span>{t.courseArtwork} · {course.slug}</span>
-                </div>
-                <span className="principle-number">{subject?.name ?? t.aiCourse}</span>
-                <h2>{course.title}</h2>
-                <p>{course.description ?? t.startLearningDescription}</p>
-                <p>
-                  {course.level} · {course.content_language.toUpperCase()}
-                  {course.estimated_minutes ? ` · ${course.estimated_minutes} min` : ''}
-                </p>
-                <Link
-                  className="button button-primary"
-                  to={`/learning/courses/${encodeURIComponent(course.id)}`}
-                >
-                  {t.viewLessons} ↗
-                </Link>
-              </article>
-            )
-          })}
-        </section>
-      </main>
-    </PageShell>
-  )
-}
-
-function CoursePage() {
-  const { t } = useLanguage()
-  const { courseId } = useParams()
-  const [course, setCourse] = useState<Course | null>(null)
-  const [lessons, setLessons] = useState<Lesson[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-
-  useEffect(() => {
-    let cancelled = false
-
-    async function loadCourse() {
-      if (!supabase || !courseId) {
-        setError(t.courseServiceUnavailable)
-        setLoading(false)
-        return
-      }
-
-      const courseResult = await supabase
-        .from('courses')
-        .select('id,subject_id,slug,title,description,content_language,level,estimated_minutes')
-        .eq('id', courseId)
-        .eq('status', 'published')
-        .not('published_at', 'is', null)
-        .maybeSingle()
-
-      if (courseResult.error || !courseResult.data) {
-        if (!cancelled) {
-          setError(t.courseUnavailable)
-          setLoading(false)
-        }
-        return
-      }
-
-      const lessonResult = await supabase
-        .from('lessons')
-        .select('id,course_id,slug,title,summary,content,display_order,estimated_minutes')
-        .eq('course_id', courseId)
-        .eq('status', 'published')
-        .not('published_at', 'is', null)
-        .order('display_order')
-
-      if (cancelled) return
-
-      if (lessonResult.error) {
-        setError(t.lessonServiceUnavailable)
-      } else {
-        setCourse(courseResult.data)
-        setLessons(lessonResult.data ?? [])
-      }
-      setLoading(false)
-    }
-
-    void loadCourse()
-    return () => { cancelled = true }
-  }, [courseId, t])
-
-  return (
-    <PageShell>
-      <main className="simple-page">
-        <p className="eyebrow">{t.courseOverview}</p>
-        <p><Link to="/learning">{t.allCourses}</Link></p>
-        {loading && <p role="status">{t.loadingCourse}</p>}
-        {error && <p role="alert">{error}</p>}
-        {course && (
-          <>
-            <h1>{course.title}</h1>
-            <p>{course.description}</p>
-            <p>{course.level} · {course.content_language.toUpperCase()}</p>
-            <h2>{t.lessons}</h2>
-            {lessons.length === 0 && <p>{t.noLessons}</p>}
-            <ol>
-              {lessons.map((lesson) => (
-                <li key={lesson.id}>
-                  <Link to={`/learning/lessons/${encodeURIComponent(lesson.id)}`}>
-                    {lesson.title}
-                  </Link>
-                  {lesson.estimated_minutes ? ` — ${lesson.estimated_minutes} ${t.minutes}` : ''}
-                  {lesson.summary && <p>{lesson.summary}</p>}
-                </li>
-              ))}
-            </ol>
-          </>
-        )}
       </main>
     </PageShell>
   )
@@ -884,6 +566,7 @@ function LessonPage() {
   const [courseId, setCourseId] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [locked, setLocked] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -896,11 +579,10 @@ function LessonPage() {
       }
 
       const result = await supabase
-        .from('lessons')
-        .select('id,course_id,slug,title,summary,content,display_order,estimated_minutes')
+        .from('sai9ja_lessons')
+        .select('id,course_id,title,description,display_order')
         .eq('id', lessonId)
-        .eq('status', 'published')
-        .not('published_at', 'is', null)
+        .eq('is_published', true)
         .maybeSingle()
 
       if (cancelled) return
@@ -908,28 +590,35 @@ function LessonPage() {
       if (result.error || !result.data) {
         setError(t.lessonUnavailable)
       } else {
-        setLesson(result.data)
         setCourseId(result.data.course_id)
+        setLocked(false)
         setVideoUrl('')
         setVideoError('')
         setVideoLoading(true)
 
-        const videoResult = await supabase
-          .from('lesson_videos')
-          .select('url,position')
+        const contentResult = await supabase
+          .from('sai9ja_lesson_content')
+          .select('content,video_url')
           .eq('lesson_id', result.data.id)
-          .order('position', { ascending: true, nullsFirst: false })
-          .limit(1)
           .maybeSingle()
 
         if (cancelled) return
 
-        if (videoResult.error) {
-          setVideoError('We could not load this lesson video. Please try again later.')
-        } else {
-          const video = videoResult.data as LessonVideoRecord | null
-          if (video?.url) setVideoUrl(video.url)
+        if (contentResult.error) {
+          setVideoError('We could not load this lesson content. Please try again later.')
+        } else if (!contentResult.data) {
+          setLocked(true)
         }
+
+        setLesson({
+          ...result.data,
+          slug: result.data.id,
+          summary: result.data.description,
+          content: contentResult.data?.content ?? '',
+          estimated_minutes: null,
+        })
+
+        if (contentResult.data?.video_url) setVideoUrl(contentResult.data.video_url)
         setVideoLoading(false)
       }
       setLoading(false)
@@ -962,7 +651,7 @@ function LessonPage() {
                   onError={() => setVideoError('The video could not be played. Check your connection or open the video link again later.')}
                 />
               )}
-              {!videoLoading && !videoError && !videoUrl && (
+              {!videoLoading && !videoError && !videoUrl && !locked && (
                 <p>This lesson does not have a video available yet.</p>
               )}
             </section>
@@ -973,7 +662,7 @@ function LessonPage() {
                 ))}
               </div>
             ) : (
-              <p>{t.lessonContentMissing}</p>
+              <p>{locked ? 'This lesson is not available to this account yet. For a paid course, unlock it on the course page or sign in with the account you purchased with.' : t.lessonContentMissing}</p>
             )}
           </article>
         )}
@@ -1146,15 +835,82 @@ function SignInPage() {
 }
 
 function TutorPage() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
+  const [question, setQuestion] = useState("")
+  const [messages, setMessages] = useState<{ role: "user" | "model"; content: string }[]>([])
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState("")
+
+  async function askTutor(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const message = question.trim()
+    if (!message || busy) return
+    if (!supabase) {
+      setError(t.supabaseUnavailable)
+      return
+    }
+
+    setError("")
+    setQuestion("")
+    const previous = messages
+    setMessages([...previous, { role: "user", content: message }])
+    setBusy(true)
+
+    try {
+      const { data, error: invokeError } = await supabase.functions.invoke("tutor-chat", {
+        body: { message, history: previous.slice(-8), language },
+      })
+      if (invokeError) throw invokeError
+      if (!data || typeof data.answer !== "string") {
+        throw new Error(data?.error || "The tutor did not return an answer.")
+      }
+      setMessages((current) => [...current, { role: "model", content: data.answer }])
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "The tutor is temporarily unavailable.")
+    } finally {
+      setBusy(false)
+    }
+  }
 
   return (
     <PageShell>
-      <main className="simple-page">
+      <main className="simple-page tutor-page">
         <p className="eyebrow">{t.companion}</p>
         <h1>{t.tutorTitle}</h1>
         <p>{t.tutorDescription}</p>
-        <Link className="button button-primary" to="/learning">{t.publishedCourses}</Link>
+        {!supabaseConfigured && (
+          <p role="alert">{t.supabaseUnavailable}</p>
+        )}
+        <section aria-label="AI learning tutor" className="tutor-conversation">
+          {messages.length === 0 && (
+            <p>Ask about AI concepts, practical examples, responsible use, or how to begin a learning track.</p>
+          )}
+          {messages.map((item, index) => (
+            <article className="principle-card" key={`${index}-${item.role}`}>
+              <p><strong>{item.role === "user" ? "You" : "SUPER-AI Tutor"}</strong></p>
+              <p style={{ whiteSpace: "pre-wrap" }}>{item.content}</p>
+            </article>
+          ))}
+          {busy && <p role="status">Your tutor is preparing a response…</p>}
+          {error && <p role="alert">{error}</p>}
+          <form onSubmit={askTutor}>
+            <label htmlFor="tutor-question">Your question</label>
+            <textarea
+              id="tutor-question"
+              value={question}
+              onChange={(event) => setQuestion(event.target.value)}
+              maxLength={4000}
+              rows={4}
+              required
+              placeholder="What would you like to understand about AI?"
+              disabled={busy || !supabaseConfigured}
+            />
+            <button className="button button-primary" type="submit" disabled={busy || !question.trim() || !supabaseConfigured}>
+              {busy ? "Thinking…" : "Ask tutor"}
+            </button>
+          </form>
+        </section>
+        <p><Link className="button button-secondary" to="/learning">{t.publishedCourses}</Link></p>
       </main>
     </PageShell>
   )
@@ -1331,6 +1087,7 @@ export function App() {
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/learning" element={<LearningPage />} />
+      <Route path="/payment/return" element={<PaymentReturnPage />} />
       <Route path="/learning/courses/:courseId" element={<CoursePage />} />
       <Route path="/learning/lessons/:lessonId" element={<LessonPage />} />
       <Route path="/login" element={<SignInPage key="login" />} />
