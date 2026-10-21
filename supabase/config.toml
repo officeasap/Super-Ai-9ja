@@ -1,0 +1,5 @@
+
+project_id = "super-ai-9ja"
+
+[functions.tutor-chat]
+verify_jwt = true
