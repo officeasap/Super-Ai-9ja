@@ -362,7 +362,6 @@ function PageShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="app-shell">
-      <SiteHeader />
       {children}
       <footer className="site-footer">
         <span>SUPER-AI 9ja</span>
@@ -1084,7 +1083,9 @@ function NotFoundPage() {
 
 export function App() {
   return (
-    <Routes>
+    <>
+      <SiteHeader />
+      <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/learning" element={<LearningPage />} />
       <Route path="/payment/return" element={<PaymentReturnPage />} />
@@ -1104,5 +1105,6 @@ export function App() {
       <Route path="/tutor" element={<TutorPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
+    </>
   )
 }
