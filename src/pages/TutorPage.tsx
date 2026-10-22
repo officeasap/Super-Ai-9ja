@@ -1,7 +1,7 @@
 
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { FunctionsHttpError } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
 
 const languages = [
@@ -10,7 +10,7 @@ const languages = [
   { value: "yo", label: "Yorùbá" },
   { value: "ha", label: "Hausa" },
   { value: "ig", label: "Igbo" },
-];
+] as const;
 
 const tracks = [
   "AI Literacy & Enterprise Upskilling",
@@ -21,16 +21,49 @@ const tracks = [
   "Large Language Models & Generative AI",
   "Generative AI & LLM Applications",
   "Applied Machine Learning & MLOps",
-];
+] as const;
+
+type Language = (typeof languages)[number]["value"];
+type Track = (typeof tracks)[number];
 
 type Message = {
   role: "user" | "assistant";
   content: string;
 };
 
+const MAX_MESSAGE_LENGTH = 4000;
+const MAX_HISTORY_MESSAGES = 8;
+
+async function getErrorMessage(error: unknown): Promise<string> {
+  if (error instanceof FunctionsHttpError) {
+    try {
+      const response = error.context;
+      const payload: unknown = await response.clone().json();
+
+      if (
+        typeof payload === "object" &&
+        payload !== null &&
+        "error" in payload &&
+        typeof payload.error === "string" &&
+        payload.error.trim()
+      ) {
+        return payload.error;
+      }
+    } catch {
+      // Fall back to the generic error below if the response is not JSON.
+    }
+  }
+
+  if (error instanceof Error && error.message.trim()) {
+    return error.message;
+  }
+
+  return "The tutor is temporarily unavailable. Please try again.";
+}
+
 export default function TutorPage() {
-  const [track, setTrack] = useState(tracks[0]);
-  const [language, setLanguage] = useState("en");
+  const [track, setTrack] = useState<Track>(tracks[0]);
+  const [language, setLanguage] = useState<Language>("en");
   const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [busy, setBusy] = useState(false);
@@ -41,7 +74,7 @@ export default function TutorPage() {
 
     if (!prompt || busy) return;
 
-    if (prompt.length > 4000) {
+    if (prompt.length > MAX_MESSAGE_LENGTH) {
       setError("Your question must be 4,000 characters or fewer.");
       return;
     }
@@ -53,27 +86,35 @@ export default function TutorPage() {
       return;
     }
 
-    const history: Message[] = [
-      ...messages,
-      { role: "user", content: prompt },
-    ];
+    const previousMessages = messages;
+    const userMessage: Message = {
+      role: "user",
+      content: prompt,
+    };
+
+    // Send previous conversation messages only. The Edge Function appends
+    // the current question, preventing duplicate user messages.
+    const history = previousMessages.slice(
+      -(MAX_HISTORY_MESSAGES - 1),
+    );
 
     setError("");
     setQuestion("");
-    setMessages(history);
+    setMessages([...previousMessages, userMessage]);
     setBusy(true);
 
     try {
-      const { data, error: invokeError } =
-        await supabase.functions.invoke("tutor-chat", {
-          body: {
-            message: prompt,
-            history: history.slice(-8),
-            subject: track,
-            track,
-            language,
-          },
-        });
+      const {
+        data,
+        error: invokeError,
+      } = await supabase.functions.invoke("tutor-chat", {
+        body: {
+          message: prompt,
+          history,
+          track,
+          language,
+        },
+      });
 
       if (invokeError) {
         throw invokeError;
@@ -96,14 +137,11 @@ export default function TutorPage() {
         { role: "assistant", content: answer.trim() },
       ]);
     } catch (caught: unknown) {
-      // Preserve the learner's question in the composer so it can be retried.
+      // Restore the conversation to its previous state. The failed
+      // question remains in the composer and won't be duplicated on retry.
+      setMessages(previousMessages);
       setQuestion(prompt);
-
-      setError(
-        caught instanceof Error && caught.message.trim()
-          ? caught.message
-          : "The tutor is temporarily unavailable. Please try again.",
-      );
+      setError(await getErrorMessage(caught));
     } finally {
       setBusy(false);
     }
@@ -130,7 +168,10 @@ export default function TutorPage() {
             Learning track
             <select
               value={track}
-              onChange={(event) => setTrack(event.target.value)}
+              onChange={(event) =>
+                setTrack(event.target.value as Track)
+              }
+              disabled={busy}
             >
               {tracks.map((item) => (
                 <option key={item} value={item}>
@@ -144,7 +185,10 @@ export default function TutorPage() {
             Language
             <select
               value={language}
-              onChange={(event) => setLanguage(event.target.value)}
+              onChange={(event) =>
+                setLanguage(event.target.value as Language)
+              }
+              disabled={busy}
             >
               {languages.map((item) => (
                 <option key={item.value} value={item.value}>
@@ -194,9 +238,7 @@ export default function TutorPage() {
                 key={`${index}-${message.role}`}
               >
                 <strong>
-                  {message.role === "user"
-                    ? "You"
-                    : "SUPER-AI Tutor"}
+                  {message.role === "user" ? "You" : "SUPER-AI Tutor"}
                 </strong>
 
                 <p style={{ whiteSpace: "pre-wrap" }}>
@@ -220,9 +262,7 @@ export default function TutorPage() {
             void sendMessage();
           }}
         >
-          <label htmlFor="tutor-question">
-            Your question
-          </label>
+          <label htmlFor="tutor-question">Your question</label>
 
           <textarea
             id="tutor-question"
@@ -233,13 +273,15 @@ export default function TutorPage() {
             }}
             placeholder="Ask a question or describe what you want to understand…"
             rows={4}
-            maxLength={4000}
+            maxLength={MAX_MESSAGE_LENGTH}
             required
             disabled={busy}
           />
 
           <div className="sa9-composer-footer">
-            <span>{question.length}/4000</span>
+            <span>
+              {question.length}/{MAX_MESSAGE_LENGTH}
+            </span>
 
             <button
               type="submit"

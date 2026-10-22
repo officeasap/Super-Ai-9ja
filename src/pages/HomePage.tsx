@@ -1,3 +1,4 @@
+
 import { Link } from 'react-router-dom'
 
 export default function HomePage() {
@@ -8,30 +9,30 @@ export default function HomePage() {
           <p className="eyebrow">SUPER-AI 9JA · LEARN. BUILD. APPLY.</p>
 
           <h1>
-            Understand AI.
+            Build AI skills.
             <br />
-            Build what comes next.
+            Put them to work.
           </h1>
 
           <p className="sa9-page-lead">
-            Develop practical artificial intelligence skills through
-            structured learning, hands-on exploration and guided support.
-            Start with the fundamentals and grow towards real applications.
+            What if the skill that changes your future is the one
+            you have not discovered yet? Step inside. Discover what
+            happens when you stop watching AI and start commanding it.
           </p>
 
           <div className="hero-actions">
             <Link className="button button-primary" to="/learning">
-              Explore courses
+              Discover your potential
             </Link>
 
             <Link className="button button-secondary" to="/register">
-              Create free account
+              Start for free
             </Link>
           </div>
 
           <p className="hero-supporting-copy">
-            Start learning at your pace. Build understanding before chasing
-            the next AI trend.
+            No tech background required. Start where you are.
+            Build towards what once seemed impossible.
           </p>
         </div>
 
@@ -39,7 +40,7 @@ export default function HomePage() {
           <div className="home-orbit">
             <div className="home-core">
               <span>AI</span>
-              <small>UNDERSTAND</small>
+              <small>YOUR NEXT MOVE</small>
             </div>
 
             <span className="orbit-label orbit-label-one">LEARN</span>
@@ -53,10 +54,49 @@ export default function HomePage() {
         <p className="eyebrow">THE PURPOSE</p>
         <h2>Knowledge should become capability.</h2>
         <p>
-          AI education should help you understand how systems work, recognise
-          their limitations, practise with purpose and make better decisions
-          about when and how to use them.
+          The real power of AI is not knowing the buzzwords.
+          It is using your skills to solve problems, create
+          opportunities and change what is possible around you.
         </p>
+      </section>
+
+      <section className="home-learning-loop sa9-page-section">
+        <div className="section-heading">
+          <p className="eyebrow">THE LEARNING LOOP</p>
+          <h2>Build AI skills. Put them to work.</h2>
+        </div>
+
+        <article className="ada-story-card">
+          <div className="ada-story-image">
+            <img
+              src="/images/courses/ada.png"
+              alt="Ada joyfully learning to code with AI and developing practical solutions for her community"
+              loading="lazy"
+            />
+          </div>
+
+          <div className="ada-story-copy">
+            <p className="eyebrow">MEET ADA · FROM BEGINNER TO BUILDER</p>
+
+            <h3>She started from zero. Now, the village calls her.</h3>
+
+            <p>
+              Ada began with no IT skills. She learned to command AI
+              prompts, write code and turn ideas into working solutions.
+              Now she helps her community tackle serious problems—from
+              crop troubles to small-business challenges.
+            </p>
+
+            <p className="ada-story-punchline">
+              Yesterday, she needed someone to show her the way.
+              Today, she is the one people turn to.
+            </p>
+
+            <Link className="button button-primary" to="/learning">
+              Start your own journey
+            </Link>
+          </div>
+        </article>
       </section>
 
       <section className="home-pathways sa9-page-section">
@@ -90,8 +130,8 @@ export default function HomePage() {
             <p className="principle-number">03 / GET GUIDANCE</p>
             <h3>Keep moving forward</h3>
             <p>
-              Use learning support to ask questions, clarify difficult ideas
-              and identify what to study next.
+              Ask questions, clarify difficult ideas and identify
+              what to study next with learning support.
             </p>
             <Link to="/tutor">Explore the AI tutor →</Link>
           </article>
@@ -103,8 +143,8 @@ export default function HomePage() {
           <p className="eyebrow">YOUR LEARNING STARTS HERE</p>
           <h2>Find a course. Build a skill. Put it to work.</h2>
           <p>
-            Discover the available courses and choose a starting point
-            that matches your interests.
+            Your first step does not require technical experience.
+            It requires the decision to begin.
           </p>
         </div>
 

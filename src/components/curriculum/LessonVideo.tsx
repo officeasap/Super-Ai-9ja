@@ -7,15 +7,33 @@ type LessonVideoProps = {
   onError?: () => void
 }
 
+function getYouTubeStart(url: URL): number | null {
+  const raw = url.searchParams.get('t') ?? url.searchParams.get('start')
+  if (!raw) return null
+  if (/^\d+$/.test(raw)) return Number(raw)
+
+  const match = raw.match(/^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/)
+  if (!match) return null
+
+  const seconds =
+    Number(match[1] ?? 0) * 3600 +
+    Number(match[2] ?? 0) * 60 +
+    Number(match[3] ?? 0)
+
+  return seconds > 0 ? seconds : null
+}
+
 function getEmbed(url: string): { src: string; provider: string } | null {
   try {
     const parsed = new URL(url)
     const host = parsed.hostname.toLowerCase().replace(/^www\./, '')
+    const start = getYouTubeStart(parsed)
+    const startParam = start ? `?start=${start}` : ''
 
     if (host === 'youtu.be') {
       const id = parsed.pathname.split('/').filter(Boolean)[0]
       return id
-        ? { src: `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}`, provider: 'YouTube' }
+        ? { src: `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}${startParam}`, provider: 'YouTube' }
         : null
     }
 
@@ -26,7 +44,7 @@ function getEmbed(url: string): { src: string; provider: string } | null {
         if (['embed', 'shorts', 'live'].includes(parts[0] ?? '')) id = parts[1] ?? null
       }
       return id
-        ? { src: `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}`, provider: 'YouTube' }
+        ? { src: `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}${startParam}`, provider: 'YouTube' }
         : null
     }
 

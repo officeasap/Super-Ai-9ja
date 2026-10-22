@@ -4,7 +4,7 @@ import { supabase, supabaseConfigured } from '../lib/supabase'
 import { useLanguage } from '../i18n/LanguageProvider'
 
 export const OFFICIAL_COURSES = [
-  { slug: 'sai-ai-literacy-enterprise-upskilling', title: 'AI Literacy & Enterprise Upskilling', price: null, image: 'ai-literacy-enterprise-upskilling' },
+  { slug: 'sai-ai-literacy-enterprise-upskilling', title: 'AI Literacy & Enterprise Upskilling', price: null, image: 'sai-ai-literacy-enterprise-upskilling' },
   { slug: 'sai-python-programming', title: 'Python Programming', price: 35, image: 'sai-python-programming' },
   { slug: 'sai-ai-video-editing-content-creation', title: 'AI Video Editing & Content Creation', price: 35, image: 'sai-ai-video-editing-content-creation' },
   { slug: 'sai-cybersecurity-ai-safety', title: 'Cybersecurity & AI Safety', price: 35, image: 'sai-cybersecurity-ai-safety' },
@@ -28,6 +28,7 @@ type LearningCopy = {
   open: string
   course: string
   freeLabel: string
+  certification: string
   beginner: string
   sections: string[]
   sectionNotes: string[]
@@ -35,11 +36,11 @@ type LearningCopy = {
 }
 
 const copyByLanguage: Record<string, LearningCopy> = {
-  en: { kicker: 'THE SUPER-AI 9JA CURRICULUM', title: 'Learn skills. Build what matters.', description: 'Nine practical learning paths. Explore a lesson from each path, then continue into the full course.', search: 'Search lessons and courses', free: 'FREE COURSE', paid: 'USD', loading: 'Loading lesson previews…', unavailable: 'The curriculum connection is not configured.', failed: 'Lesson previews could not load. Course paths remain available.', open: 'Open lesson', course: 'View course', freeLabel: 'Free', beginner: 'START HERE', sections: ['FOUNDATIONS & CREATION', 'APPLIED AI & AUTOMATION', 'GENERATIVE AI & MACHINE LEARNING'], sectionNotes: ['Build core skills and create with AI.', 'Practice safe, practical AI and automation.', 'Explore language models and machine learning.'], empty: 'No matching lessons. Try another search.' },
-  pcm: { kicker: 'SUPER-AI 9JA CURRICULUM', title: 'Learn skills. Build wetin matter.', description: 'Nine practical learning paths. Check one lesson from each path, then continue the full course.', search: 'Search lessons and courses', free: 'FREE COURSE', paid: 'USD', loading: 'We dey load lesson previews…', unavailable: 'Curriculum connection never set up.', failed: 'Lesson previews no load. Course paths still dey available.', open: 'Open lesson', course: 'View course', freeLabel: 'Free', beginner: 'START HERE', sections: ['FOUNDATIONS & CREATION', 'APPLIED AI & AUTOMATION', 'GENERATIVE AI & MACHINE LEARNING'], sectionNotes: ['Build your basic skills and create with AI.', 'Practice safe AI and automation.', 'Explore language models and machine learning.'], empty: 'No lesson match. Try another search.' },
-  yo: { kicker: 'ÈTÒ Ẹ̀KỌ́ SUPER-AI 9JA', title: 'Kọ́ ọgbọ́n. Ṣẹ̀dá ohun tó ṣe pàtàkì.', description: 'Àwọn ọ̀nà ẹ̀kọ́ mẹ́sàn-án. Ṣàyẹ̀wò ẹ̀kọ́ kan láti ọ̀nà kọ̀ọ̀kan, kí o sì tẹ̀síwájú.', search: 'Wá ẹ̀kọ́ àti kíláàsì', free: 'Ọ̀FẸ́', paid: 'USD', loading: 'A ń ṣí àwọn ẹ̀kọ́…', unavailable: 'A kò tíì ṣètò ìsopọ̀ ẹ̀kọ́.', failed: 'A kò lè ṣí àwọn ẹ̀kọ́ àkọ́kọ́. Àwọn ọ̀nà ẹ̀kọ́ ṣì wà.', open: 'Ṣí ẹ̀kọ́', course: 'Wo kíláàsì', freeLabel: 'Ọ̀fẹ́', beginner: 'BẸ̀RẸ̀ NÍBÍ', sections: ['ÌPÌLẸ̀ ÀTI ṢÍṢẸ̀DÁ', 'LÍLÒ AI ÀTI ÌṢẸ́ ALAṢẸ́', 'GENERATIVE AI ÀTI Ẹ̀KỌ́ Ẹ̀RỌ̀'], sectionNotes: ['Kọ́ àwọn ọgbọ́n ìpìlẹ̀, kí o sì ṣẹ̀dá pẹ̀lú AI.', 'Lo AI àti automation lọ́nà tó bójú mu.', 'Ṣàwárí language models àti machine learning.'], empty: 'Kò sí ẹ̀kọ́ tó bá ìwá yìí mu.' },
-  ha: { kicker: 'TSARIN KOYON SUPER-AI 9JA', title: 'Koyi ƙwarewa. Gina abin da ya dace.', description: 'Hanyoyin koyo guda tara. Duba darasi daga kowace hanya, sannan ka ci gaba.', search: 'Nemo darussa da kwasa-kwasai', free: 'KYAUTA', paid: 'USD', loading: 'Ana loda darussa…', unavailable: 'Ba a saita haɗin tsarin koyon ba.', failed: 'Ba a iya loda samfuran darussa ba. Hanyoyin kwas suna nan.', open: 'Buɗe darasi', course: 'Duba kwas', freeLabel: 'Kyauta', beginner: 'FARA NAN', sections: ['TUSHE DA ƘIRƘIRA', 'AI MAI AMFANI DA AIKI TA KAI', 'GENERATIVE AI DA MACHINE LEARNING'], sectionNotes: ['Koyi tushe kuma ƙirƙiri da AI.', 'Yi amfani da AI cikin aminci da automation.', 'Binciki language models da machine learning.'], empty: 'Ba a sami darasin da ya dace ba.' },
-  ig: { kicker: 'USORO MMỤTA SUPER-AI 9JA', title: 'Mụta nka. Wuo ihe bara uru.', description: 'Ụzọ mmụta itoolu. Lelee otu nkuzi n’ụzọ ọ bụla, gaa n’ihu n’usoro mmụta zuru ezu.', search: 'Chọọ nkuzi na ọmụmụ', free: 'N’EFU', paid: 'USD', loading: 'A na-ebunye nkuzi…', unavailable: 'Edebeghị njikọ usoro ọmụmụ.', failed: 'Anyị enweghị ike ibunye nkuzi ndị a. Ụzọ ọmụmụ ka dị.', open: 'Mepee nkuzi', course: 'Lee ọmụmụ', freeLabel: 'N’efu', beginner: 'MALITE EBE A', sections: ['NTỌALA NA OKIKE', 'AI A NA-EJI ARỤ ỌRỤ NA AUTOMATION', 'GENERATIVE AI NA MACHINE LEARNING'], sectionNotes: ['Mụta ntọala ma jiri AI mepụta ihe.', 'Jiri AI na automation n’ụzọ dị nchebe.', 'Chọpụta language models na machine learning.'], empty: 'Enweghị nkuzi dabara na ọchụchọ a.' },
+  en: { kicker: 'THE SUPER-AI 9JA CURRICULUM', title: 'Learn skills. Build what matters.', description: 'Nine practical learning paths. Explore a lesson from each path, then continue into the full course.', search: 'Search lessons and courses', free: 'FREE COURSE', paid: 'USD', loading: 'Loading lesson previews…', unavailable: 'The curriculum connection is not configured.', failed: 'Lesson previews could not load. Course paths remain available.', open: 'Open lesson', course: 'View course', freeLabel: 'Free', certification: 'BEGINNER TO EXPERT · CERTIFICATION AT COURSE END', beginner: 'START HERE', sections: ['FOUNDATIONS & CREATION', 'APPLIED AI & AUTOMATION', 'GENERATIVE AI & MACHINE LEARNING'], sectionNotes: ['Build core skills and create with AI.', 'Practice safe, practical AI and automation.', 'Explore language models and machine learning.'], empty: 'No matching lessons. Try another search.' },
+  pcm: { kicker: 'SUPER-AI 9JA CURRICULUM', title: 'Learn skills. Build wetin matter.', description: 'Nine practical learning paths. Check one lesson from each path, then continue the full course.', search: 'Search lessons and courses', free: 'FREE COURSE', paid: 'USD', loading: 'We dey load lesson previews…', unavailable: 'Curriculum connection never set up.', failed: 'Lesson previews no load. Course paths still dey available.', open: 'Open lesson', course: 'View course', freeLabel: 'Free', certification: 'BEGINNER REACH EXPERT · CERTIFICATE WHEN COURSE FINISH', beginner: 'START HERE', sections: ['FOUNDATIONS & CREATION', 'APPLIED AI & AUTOMATION', 'GENERATIVE AI & MACHINE LEARNING'], sectionNotes: ['Build your basic skills and create with AI.', 'Practice safe AI and automation.', 'Explore language models and machine learning.'], empty: 'No lesson match. Try another search.' },
+  yo: { kicker: 'ÈTÒ Ẹ̀KỌ́ SUPER-AI 9JA', title: 'Kọ́ ọgbọ́n. Ṣẹ̀dá ohun tó ṣe pàtàkì.', description: 'Àwọn ọ̀nà ẹ̀kọ́ mẹ́sàn-án. Ṣàyẹ̀wò ẹ̀kọ́ kan láti ọ̀nà kọ̀ọ̀kan, kí o sì tẹ̀síwájú.', search: 'Wá ẹ̀kọ́ àti kíláàsì', free: 'Ọ̀FẸ́', paid: 'USD', loading: 'A ń ṣí àwọn ẹ̀kọ́…', unavailable: 'A kò tíì ṣètò ìsopọ̀ ẹ̀kọ́.', failed: 'A kò lè ṣí àwọn ẹ̀kọ́ àkọ́kọ́. Àwọn ọ̀nà ẹ̀kọ́ ṣì wà.', open: 'Ṣí ẹ̀kọ́', course: 'Wo kíláàsì', freeLabel: 'Ọ̀fẹ́', certification: 'LÁTI ÌBẸ̀RẸ̀ DÉ ONÍMỌ̀ · ÌWÉ Ẹ̀RÍ NÍ ÌPARÍ Ẹ̀KỌ́', beginner: 'BẸ̀RẸ̀ NÍBÍ', sections: ['ÌPÌLẸ̀ ÀTI ṢÍṢẸ̀DÁ', 'LÍLÒ AI ÀTI ÌṢẸ́ ALAṢẸ́', 'GENERATIVE AI ÀTI Ẹ̀KỌ́ Ẹ̀RỌ̀'], sectionNotes: ['Kọ́ àwọn ọgbọ́n ìpìlẹ̀, kí o sì ṣẹ̀dá pẹ̀lú AI.', 'Lo AI àti automation lọ́nà tó bójú mu.', 'Ṣàwárí language models àti machine learning.'], empty: 'Kò sí ẹ̀kọ́ tó bá ìwá yìí mu.' },
+  ha: { kicker: 'TSARIN KOYON SUPER-AI 9JA', title: 'Koyi ƙwarewa. Gina abin da ya dace.', description: 'Hanyoyin koyo guda tara. Duba darasi daga kowace hanya, sannan ka ci gaba.', search: 'Nemo darussa da kwasa-kwasai', free: 'KYAUTA', paid: 'USD', loading: 'Ana loda darussa…', unavailable: 'Ba a saita haɗin tsarin koyon ba.', failed: 'Ba a iya loda samfuran darussa ba. Hanyoyin kwas suna nan.', open: 'Buɗe darasi', course: 'Duba kwas', freeLabel: 'Kyauta', certification: 'DAGA MAFARI ZUWA GWANI · TAKARDAR SHAIDA A ƘARSHEN KWAS', beginner: 'FARA NAN', sections: ['TUSHE DA ƘIRƘIRA', 'AI MAI AMFANI DA AIKI TA KAI', 'GENERATIVE AI DA MACHINE LEARNING'], sectionNotes: ['Koyi tushe kuma ƙirƙiri da AI.', 'Yi amfani da AI cikin aminci da automation.', 'Binciki language models da machine learning.'], empty: 'Ba a sami darasin da ya dace ba.' },
+  ig: { kicker: 'USORO MMỤTA SUPER-AI 9JA', title: 'Mụta nka. Wuo ihe bara uru.', description: 'Ụzọ mmụta itoolu. Lelee otu nkuzi n’ụzọ ọ bụla, gaa n’ihu n’usoro mmụta zuru ezu.', search: 'Chọọ nkuzi na ọmụmụ', free: 'N’EFU', paid: 'USD', loading: 'A na-ebunye nkuzi…', unavailable: 'Edebeghị njikọ usoro ọmụmụ.', failed: 'Anyị enweghị ike ibunye nkuzi ndị a. Ụzọ ọmụmụ ka dị.', open: 'Mepee nkuzi', course: 'Lee ọmụmụ', freeLabel: 'N’efu', certification: 'SITE NA MBIDO RUO ỌKACHAMARA · ASAMBODO NA ỌGWỤGWỤ ỌMỤMỤ', beginner: 'MALITE EBE A', sections: ['NTỌALA NA OKIKE', 'AI A NA-EJI ARỤ ỌRỤ NA AUTOMATION', 'GENERATIVE AI NA MACHINE LEARNING'], sectionNotes: ['Mụta ntọala ma jiri AI mepụta ihe.', 'Jiri AI na automation n’ụzọ dị nchebe.', 'Chọpụta language models na machine learning.'], empty: 'Enweghị nkuzi dabara na ọchụchọ a.' },
 }
 
 type CourseRecord = {
@@ -66,11 +67,6 @@ const sectionSlugs = [
   ['sai-cybersecurity-ai-safety', 'sai-deep-learning', 'sai-ai-agents-workflow-automation'],
   ['sai-hugging-face-llms-generative-ai', 'sai-nvidia-generative-ai-llms', 'sai-applied-machine-learning-mlops'],
 ]
-
-function youtubeId(url: string | null | undefined) {
-  if (!url) return ''
-  return url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/)?.[1] ?? ''
-}
 
 export function LearningPage() {
   const { language } = useLanguage()
@@ -210,13 +206,11 @@ export function LearningPage() {
 
             <div className="sa9-video-grid">
               {section.cards.map(({ course, record, lesson }, cardIndex) => {
-                const id = youtubeId(lesson?.video_url)
                 const destination = lesson?.id
                   ? '/learning/lessons/' + encodeURIComponent(lesson.id)
                   : '/learning/courses/' + encodeURIComponent(record?.id ?? course.slug)
-                const image = id
-                  ? 'https://img.youtube.com/vi/' + id + '/hqdefault.jpg'
-                  : '/images/courses/' + course.image + '.webp'
+                // Course art is always local course artwork, never a video thumbnail.
+                const image = '/images/courses/' + course.image + '.webp'
 
                 return (
                   <article className="sa9-video-card" key={course.slug}>
@@ -231,13 +225,19 @@ export function LearningPage() {
                       }} />
                       <span className="sa9-video-card__play" aria-hidden="true">▶</span>
                       <span className="sa9-video-card__index">0{cardIndex + 1} / 03</span>
-                      <span className="sa9-video-card__tag">{id ? 'VIDEO LESSON' : 'LEARNING PATH'}</span>
+                      <span className="sa9-video-card__tag">{lesson ? 'LESSON PREVIEW' : 'LEARNING PATH'}</span>
                     </Link>
                     <div className="sa9-video-card__body">
                       <div className="sa9-video-card__meta">
                         <span>{record?.level ?? 'BEGINNER'}</span>
                         <span>{course.price == null ? copy.freeLabel : '$' + course.price + ' ' + copy.paid}</span>
                       </div>
+                      {course.price != null && (
+                        <div className="sa9-video-card__certification">
+                          <span aria-hidden="true">✦</span>
+                          <span>{copy.certification}</span>
+                        </div>
+                      )}
                       <h3>{lesson?.title ?? course.title}</h3>
                       <p>{lesson?.description || record?.description || 'Start with a structured lesson, then continue through the complete learning path.'}</p>
                       <p className="sa9-video-card__course">{course.title}</p>

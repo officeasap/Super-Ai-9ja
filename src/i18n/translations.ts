@@ -13,6 +13,12 @@ export interface TranslationSet {
   readonly home: string
   readonly footer: string
   readonly learningLoop: string
+  readonly adaEyebrow: string
+  readonly adaHeadline: string
+  readonly adaBody: string
+  readonly adaPunchline: string
+  readonly adaCta: string
+  readonly adaImageAlt: string
   readonly understand: string
   readonly practice: string
   readonly apply: string
@@ -67,6 +73,16 @@ export interface TranslationSet {
   readonly lessonUnavailable: string
   readonly coursesLoadFailed: string
   readonly imageDescription: string
+  readonly lessonVideo: string
+  readonly loadingVideo: string
+  readonly videoUnavailable: string
+  readonly videoPlaybackError: string
+  readonly lessonVideoMissing: string
+  readonly lessonLockedNotice: string
+  readonly lessonContentLoadFailed: string
+  readonly videoPlayerFailed: string
+  readonly openLessonVideo: string
+  readonly lessonNotes: string
 }
 
 export const translations: Record<SupportedLanguage, TranslationSet> = {
@@ -74,7 +90,7 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
     brand: 'SUPER-AI 9ja',
     eyebrow: 'AI SKILLS FOR REAL LIFE',
     headline: 'Build AI skills. Put them to work.',
-    description: 'Explore practical AI learning designed to help you understand the technology and apply it to real problems.',
+    description: 'What if the skill that changes your future is the one you haven’t discovered yet? Step inside—and discover what happens when you start commanding AI.',
     courses: 'COURSES',
     tutor: 'AI tutor',
     getStarted: 'Start learning',
@@ -83,6 +99,12 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
     home: 'Home',
     footer: 'LEARN WITH PURPOSE. BUILD WITH INTENT.',
     learningLoop: 'THE LEARNING LOOP',
+    adaEyebrow: "MEET ADA · FROM BEGINNER TO BUILDER",
+    adaHeadline: "She started from zero. Now, the village calls her.",
+    adaBody: "Ada began with no IT skills. She learned to command AI prompts, write code, and turn ideas into practical solutions. Now she helps people in her village tackle serious problems—from crop troubles to small-business challenges.",
+    adaPunchline: "Yesterday, she needed someone to show her the way. Today, she is the one people turn to.",
+    adaCta: "Start your own journey",
+    adaImageAlt: "Ada joyfully using a laptop to code and develop practical solutions for her community",
     understand: 'Understand',
     practice: 'Practice',
     apply: 'Apply',
@@ -137,6 +159,16 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
     lessonUnavailable: 'This lesson could not be found or is not available.',
     coursesLoadFailed: 'Unable to load courses. Please try again.',
     imageDescription: 'course artwork placeholder',
+    lessonVideo: 'Lesson video',
+    loadingVideo: 'Loading lesson video…',
+    videoUnavailable: 'The video could not be played. Check your connection or open the video link again later.',
+    videoPlaybackError: 'This lesson does not have a video available yet.',
+    lessonVideoMissing: 'This lesson does not have a video available yet.',
+    lessonLockedNotice: 'This lesson is not available to this account yet. For a paid course, unlock it on the course page or sign in with the account you purchased with.',
+    lessonContentLoadFailed: 'We could not load this lesson content. Please try again later.',
+    videoPlayerFailed: 'The embedded player could not be loaded. Try opening the video directly.',
+    openLessonVideo: 'Open lesson video in a new tab',
+    lessonNotes: 'Lesson notes',
   },
   pcm: {
     brand: 'SUPER-AI 9ja',
@@ -151,6 +183,12 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
     home: 'Home',
     footer: 'LEARN WITH PURPOSE. BUILD WITH INTENT.',
     learningLoop: 'HOW LEARNING DEY WORK',
+    adaEyebrow: "MEET ADA · FROM BEGINNER REACH BUILDER",
+    adaHeadline: "She start from zero. Now, na the whole village dey call am.",
+    adaBody: "Ada start without any IT skill. She learn how to give AI correct prompts, write code, and turn ideas to solutions wey people fit use for real life. Now, she dey help people for her village solve serious problems—from wahala wey affect their crops to challenges wey small businesses dey face.",
+    adaPunchline: "Yesterday, she need person to show am road. Today, na she people dey turn to for help.",
+    adaCta: "Begin your own journey",
+    adaImageAlt: "Ada dey use laptop to write code and develop useful solutions for her community",
     understand: 'Understand',
     practice: 'Practice',
     apply: 'Apply',
@@ -205,6 +243,16 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
     lessonUnavailable: 'We no fit find this lesson or e no dey available.',
     coursesLoadFailed: 'Courses no fit load. Abeg try again.',
     imageDescription: 'course image placeholder',
+    lessonVideo: 'Lesson video',
+    loadingVideo: 'Lesson video dey load…',
+    videoUnavailable: 'The video no fit play. Check your connection or open the video link again later.',
+    videoPlaybackError: 'This lesson no get video yet.',
+    lessonVideoMissing: 'This lesson no get video yet.',
+    lessonLockedNotice: 'This lesson no dey available for this account yet. For paid course, unlock am for the course page or sign in with the account wey you use pay.',
+    lessonContentLoadFailed: 'We no fit load this lesson content. Abeg try again later.',
+    videoPlayerFailed: 'The video player no fit load. Try opening the video directly.',
+    openLessonVideo: 'Open lesson video for new tab',
+    lessonNotes: 'Lesson notes',
   },
   yo: {
     brand: 'SUPER-AI 9ja',
@@ -219,6 +267,12 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
     home: 'Ilé',
     footer: 'KỌ́ PẸ̀LÚ ÈTÒ. KỌ́ Ọ̀NÀ TÍ Ó DÁRA.',
     learningLoop: 'ÌLÀNÀ Ẹ̀KỌ́',
+    adaEyebrow: "PÀDÉ ADA · LÁTI OLÙBẸ̀RẸ̀ DÉ ẸNI TÓ Ń ṢẸ̀DÁ",
+    adaHeadline: "Ó bẹ̀rẹ̀ láti òfo. Ní báyìí, àwọn ará abúlé rẹ̀ ló ń wá a fún ìrànlọ́wọ́.",
+    adaBody: "Ada bẹ̀rẹ̀ láìní ọgbọ́n IT kankan. Ó kọ́ bí a ṣe ń fún AI ní àṣẹ tó péye, bí a ṣe ń kọ kóòdù, àti bí a ṣe ń sọ èrò di ojútùú tó wúlò. Ní báyìí, ó ń ran àwọn ará abúlé rẹ̀ lọ́wọ́ láti yanjú àwọn ìṣòro pàtàkì—láti ìṣòro àwọn ohun ọ̀gbìn dé àwọn ìpèníjà àwọn oníṣòwò kéékèèké.",
+    adaPunchline: "Àná, ó nílò ẹnì kan láti tọ́ ọ́n sọ́nà. Lónìí, òun ni àwọn ènìyàn ń wá fún ìrànlọ́wọ́.",
+    adaCta: "Bẹ̀rẹ̀ ìrìnàjò tìrẹ",
+    adaImageAlt: "Ada ń lo kọ̀ǹpútà alágbèéká láti kọ́ kóòdù àti ṣẹ̀dá ojútùú tó wúlò fún àwùjọ rẹ̀",
     understand: 'Lóye',
     practice: 'Ṣe àdánwò',
     apply: ' lò ó',
@@ -273,6 +327,16 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
     lessonUnavailable: 'A kò rí ìkẹ́kọ̀ọ́ yìí tàbí kò sí ní ìsinsìnyí.',
     coursesLoadFailed: 'A kò lè ṣí àwọn ẹ̀kọ́. Jọ̀wọ́ tún gbìyànjú.',
     imageDescription: 'ààyè àwòrán ẹ̀kọ́',
+    lessonVideo: 'Fídíò ẹ̀kọ́',
+    loadingVideo: 'Fídíò ẹ̀kọ́ ń ṣí…',
+    videoUnavailable: 'Fídíò náà kò ṣiṣẹ́. Ṣàyẹ̀wò ìsopọ̀ rẹ tàbí tún ṣí ìjápọ̀ fídíò náà.',
+    videoPlaybackError: 'Fídíò kò tíì sí fún ìkẹ́kọ̀ọ́ yìí.',
+    lessonVideoMissing: 'Fídíò kò tíì sí fún ìkẹ́kọ̀ọ́ yìí.',
+    lessonLockedNotice: 'Ìkẹ́kọ̀ọ́ yìí kò sí fún àkọọ́lẹ̀ yìí. Tí ẹ̀kọ́ náà bá jẹ́ ti owó, ṣí i lórí ojú-ewé ẹ̀kọ́ tàbí wọlé pẹ̀lú àkọọ́lẹ̀ tí o fi sanwó.',
+    lessonContentLoadFailed: 'A kò lè ṣí àkóónú ìkẹ́kọ̀ọ́ yìí. Jọ̀wọ́ tún gbìyànjú.',
+    videoPlayerFailed: 'Ẹ̀rọ fídíò kò lè ṣí. Gbìyànjú láti ṣí fídíò náà tààrà.',
+    openLessonVideo: 'Ṣí fídíò ẹ̀kọ́ ní ojú-ewé tuntun',
+    lessonNotes: 'Àkọsílẹ̀ ẹ̀kọ́',
   },
   ha: {
     brand: 'SUPER-AI 9ja',
@@ -287,6 +351,12 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
     home: 'Gida',
     footer: 'KOYI DA MANUFA. GINA DA NIYYA.',
     learningLoop: 'YADDA KOYO KE AIKI',
+    adaEyebrow: "HAƊU DA ADA · DAGA MAFARI ZUWA MAI ƘIRƘIRA",
+    adaHeadline: "Ta fara daga tushe. Yanzu, mutanen ƙauyenta suna neman taimakonta.",
+    adaBody: "Ada ta fara ba tare da wata ƙwarewar IT ba. Ta koyi yadda ake ba AI umarni masu kyau, rubuta lambar kwamfuta, da mayar da ra’ayoyi zuwa mafita masu amfani. Yanzu tana taimaka wa mutanen ƙauyenta wajen magance manyan matsaloli—daga matsalolin amfanin gona zuwa ƙalubalen ƙananan sana’o’i.",
+    adaPunchline: "Jiya, tana buƙatar wanda zai nuna mata hanya. Yau, ita ce mutanen ke zuwa wurinta neman taimako.",
+    adaCta: "Fara tafiyarka",
+    adaImageAlt: "Ada tana amfani da kwamfutar tafi-da-gidanka don rubuta lamba da ƙirƙirar mafita masu amfani ga al’ummarta",
     understand: 'Fahimta',
     practice: 'Gwaji',
     apply: 'Amfani',
@@ -341,6 +411,16 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
     lessonUnavailable: 'Ba a sami wannan darasi ba ko kuma babu shi yanzu.',
     coursesLoadFailed: 'An kasa loda darussa. Da fatan za a sake gwadawa.',
     imageDescription: 'wurin hoton darasi',
+    lessonVideo: 'Bidiyon darasi',
+    loadingVideo: 'Ana loda bidiyon darasi…',
+    videoUnavailable: 'Bidiyon bai kunna ba. Duba haɗin intanet ɗinka ko sake buɗe hanyar bidiyon.',
+    videoPlaybackError: 'Babu bidiyo na wannan darasi tukuna.',
+    lessonVideoMissing: 'Babu bidiyo na wannan darasi tukuna.',
+    lessonLockedNotice: 'Ba a buɗe wannan darasi ga asusunka ba tukuna. Idan darasin na biyan kuɗi ne, buɗe shi daga shafin darasi ko shiga da asusun da ka biya da shi.',
+    lessonContentLoadFailed: 'Ba a iya loda bayanan wannan darasi ba. Da fatan za a sake gwadawa.',
+    videoPlayerFailed: 'Mai kunna bidiyo bai buɗe ba. Gwada buɗe bidiyon kai tsaye.',
+    openLessonVideo: 'Buɗe bidiyon darasi a sabon shafi',
+    lessonNotes: 'Bayanan darasi',
   },
   ig: {
     brand: 'SUPER-AI 9ja',
@@ -355,6 +435,12 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
     home: 'Ụlọ',
     footer: 'MỤỌ IHE N’EBUMNUCHE. JIRI NZUBE WUO.',
     learningLoop: 'OTÚ ỊMỤTA SI ARỤ ỌRỤ',
+    adaEyebrow: "ZUTE ADA · SITE N’AKA MMALITE RỤỌ ONYE NA-EWU IHE",
+    adaHeadline: "Ọ malitere n’enweghị ihe ọmụma. Ugbu a, ndị obodo ya na-achọ enyemaka ya.",
+    adaBody: "Ada malitere n’enweghị nkà IT ọ bụla. Ọ mụtara otu esi enye AI ntụziaka ziri ezi, dee koodu, ma gbanwee echiche ka ha bụrụ ngwọta bara uru. Ugbu a, ọ na-enyere ndị obodo ya aka idozi nsogbu ndị siri ike—site na nsogbu ihe ubi ruo n’ihe ịma aka nke obere azụmahịa.",
+    adaPunchline: "Ụnyaahụ, ọ chọrọ onye ga-egosi ya ụzọ. Taa, ọ bụ ya ka ndị mmadụ na-agakwuru maka enyemaka.",
+    adaCta: "Malite njem nke gị",
+    adaImageAlt: "Ada na-eji laptọọpụ ede koodu ma mepụta ngwọta bara uru maka obodo ya",
     understand: 'Ghọta',
     practice: 'Mụọ site n’omume',
     apply: 'Jiri ya',
@@ -409,5 +495,15 @@ export const translations: Record<SupportedLanguage, TranslationSet> = {
     lessonUnavailable: 'Ahụghị nkuzi a ma ọ bụ na ọ dịghị ugbu a.',
     coursesLoadFailed: 'Enweghị ike ibunye nkuzi. Biko nwaa ọzọ.',
     imageDescription: 'ebe onyonyo nkuzi',
+    lessonVideo: 'Vidio nkuzi',
+    loadingVideo: 'A na-ebunye vidio nkuzi…',
+    videoUnavailable: 'Vidio ahụ enweghị ike ịkpọ. Lelee njikọ ịntanetị gị ma ọ bụ mepee njikọ vidio ọzọ.',
+    videoPlaybackError: 'Enweghị vidio maka nkuzi a ugbu a.',
+    lessonVideoMissing: 'Enweghị vidio maka nkuzi a ugbu a.',
+    lessonLockedNotice: 'Nkuzi a adịghị maka akaụntụ a ugbu a. Maka nkuzi a na-akwụ ụgwọ, kpọghee ya na ibe nkuzi ma ọ bụ jiri akaụntụ ị jiri kwụọ ụgwọ banye.',
+    lessonContentLoadFailed: 'Anyị enweghị ike ibunye ọdịnaya nkuzi a. Biko nwaa ọzọ.',
+    videoPlayerFailed: 'Ihe ọkpụkpọ vidio emegheghị. Gbalịa imepe vidio ahụ ozugbo.',
+    openLessonVideo: 'Mepee vidio nkuzi na taabụ ọhụrụ',
+    lessonNotes: 'Ihe ndekọ nkuzi',
   },
 }

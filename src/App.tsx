@@ -289,6 +289,9 @@ function SiteHeader() {
         className={`site-nav${menuOpen ? ' is-open' : ''}`}
         aria-label="Main navigation"
       >
+        <Link className="nav-link nav-link--menu-signin" to="/login" onClick={() => { closeMenu(); window.scrollTo({ top: 0, left: 0, behavior: 'auto' }) }}>
+          Sign In <span aria-hidden="true">↗</span>
+        </Link>
         <Link className="nav-link" to="/" onClick={() => { closeMenu(); window.scrollTo({ top: 0, left: 0, behavior: 'auto' }) }}>{t.home}</Link>
         <Link className="nav-link nav-link--courses" to="/learning" onClick={() => { closeMenu(); window.scrollTo({ top: 0, left: 0, behavior: 'auto' }) }}>
           COURSES
@@ -310,9 +313,6 @@ function SiteHeader() {
           </div>
         </div>
         <Link className="nav-link" to="/contact" onClick={() => { closeMenu(); window.scrollTo({ top: 0, left: 0, behavior: 'auto' }) }}>Contact</Link>
-        <Link className="nav-link nav-link--menu-signin" to="/login" onClick={() => { closeMenu(); window.scrollTo({ top: 0, left: 0, behavior: 'auto' }) }}>
-          Sign In <span aria-hidden="true">↗</span>
-        </Link>
       </nav>
 
       <div className="header-actions">
@@ -488,6 +488,33 @@ function HomePage() {
           </div>
         </section>
 
+        <section className="home-learning-loop" aria-labelledby="ada-story-title">
+          <div className="section-heading">
+            <p className="eyebrow">{t.learningLoop}</p>
+            <h2 id="ada-story-title">{t.headline}</h2>
+          </div>
+
+          <article className="ada-story-card">
+            <div className="ada-story-image">
+              <img
+                src="/images/courses/ada.png"
+                alt={t.adaImageAlt}
+                loading="lazy"
+              />
+            </div>
+
+            <div className="ada-story-copy">
+              <p className="eyebrow">{t.adaEyebrow}</p>
+              <h3>{t.adaHeadline}</h3>
+              <p>{t.adaBody}</p>
+              <p className="ada-story-punchline">{t.adaPunchline}</p>
+              <Link className="button button-primary" to="/learning">
+                {t.adaCta} <span aria-hidden="true">↗</span>
+              </Link>
+            </div>
+          </article>
+        </section>
+
         <section className="home-pathways" aria-labelledby="pathways-title">
           <div className="home-section-heading">
             <div>
@@ -604,7 +631,7 @@ function LessonPage() {
         if (cancelled) return
 
         if (contentResult.error) {
-          setVideoError('We could not load this lesson content. Please try again later.')
+          setVideoError(t.lessonContentLoadFailed)
         } else if (!contentResult.data) {
           setLocked(true)
         }
@@ -640,18 +667,18 @@ function LessonPage() {
             {lesson.summary && <p>{lesson.summary}</p>}
             {lesson.estimated_minutes && <p>{lesson.estimated_minutes} {t.minutes}</p>}
             <section className="lesson-video-section" aria-labelledby="lesson-video-heading">
-              <h2 id="lesson-video-heading">Lesson video</h2>
-              {videoLoading && <p role="status">Loading lesson video…</p>}
+              <h2 id="lesson-video-heading">{t.lessonVideo}</h2>
+              {videoLoading && <p role="status">{t.loadingVideo}</p>}
               {!videoLoading && videoError && <p role="alert">{videoError}</p>}
               {!videoLoading && !videoError && videoUrl && (
                 <LessonVideo
                   url={videoUrl}
                   title={lesson.title}
-                  onError={() => setVideoError('The video could not be played. Check your connection or open the video link again later.')}
+                  onError={() => setVideoError(t.videoUnavailable)}
                 />
               )}
               {!videoLoading && !videoError && !videoUrl && !locked && (
-                <p>This lesson does not have a video available yet.</p>
+                <p>{t.lessonVideoMissing}</p>
               )}
             </section>
             {lesson.content ? (
@@ -661,7 +688,7 @@ function LessonPage() {
                 ))}
               </div>
             ) : (
-              <p>{locked ? 'This lesson is not available to this account yet. For a paid course, unlock it on the course page or sign in with the account you purchased with.' : t.lessonContentMissing}</p>
+              <p>{locked ? t.lessonLockedNotice : t.lessonContentMissing}</p>
             )}
           </article>
         )}
@@ -1041,33 +1068,178 @@ function AboutPage() {
 function ContactPage() {
   const { language } = useLanguage();
   const copy = getPageCopy(language);
+  const [submitNotice, setSubmitNotice] = useState('');
+
+  const formCopy: Record<string, {
+    eyebrow: string; title: string; intro: string; name: string;
+    email: string; topic: string; topics: string[]; subject: string;
+    message: string; placeholder: string; submit: string;
+    privacy: string; notConnected: string;
+  }> = {
+    en: {
+      eyebrow: 'DIRECT LINE · SUPER-AI 9JA',
+      title: 'Let’s start a conversation.',
+      intro: 'Tell us what you need help with. Complete the form below so your enquiry is ready to send.',
+      name: 'Your name', email: 'Email address', topic: 'What can we help with?',
+      topics: ['Learning and courses', 'Account and access', 'Partnerships', 'Feedback and suggestions', 'Something else'],
+      subject: 'Subject', message: 'Your message',
+      placeholder: 'Tell the SUPER-AI 9ja team a little more…',
+      submit: 'Prepare message', privacy: 'Please do not include passwords or sensitive account information.',
+      notConnected: 'Your message has not been sent. Message delivery is not connected yet; please do not treat this form as a submitted enquiry.'
+    },
+    pcm: {
+      eyebrow: 'DIRECT LINE · SUPER-AI 9JA',
+      title: 'Make we start the conversation.',
+      intro: 'Tell us the help wey you need. Fill this form make your message ready to send.',
+      name: 'Your name', email: 'Email address', topic: 'Wetin we fit help you with?',
+      topics: ['Learning and courses', 'Account and access', 'Partnership', 'Feedback and suggestions', 'Other matter'],
+      subject: 'Message topic', message: 'Your message',
+      placeholder: 'Tell SUPER-AI 9ja team small more…',
+      submit: 'Prepare message', privacy: 'No put password or sensitive account information here.',
+      notConnected: 'Your message never send. Message delivery never connect yet, so no treat this form as submitted.'
+    },
+    yo: {
+      eyebrow: 'Ọ̀NÀ ÌBÁNISỌ̀RỌ̀ · SUPER-AI 9JA',
+      title: 'Ẹ jẹ́ ká bẹ̀rẹ̀ ìjíròrò.',
+      intro: 'Sọ irú ìrànlọ́wọ́ tí o nílò fún wa. Kún fọ́ọ̀mù yìí kí ìbéèrè rẹ lè múra sílẹ̀.',
+      name: 'Orúkọ rẹ', email: 'Àdírẹ́sì í-meèlì', topic: 'Kí ni a lè ràn ọ́ lọ́wọ́?',
+      topics: ['Ẹ̀kọ́ àti àwọn kíláàsì', 'Àkọọ́lẹ̀ àti ìwọlé', 'Ìfọwọ́sowọ́pọ̀', 'Àbá àti ìmọ̀ràn', 'Ohun mìíràn'],
+      subject: 'Kókó ọ̀rọ̀', message: 'Ìránṣẹ́ rẹ',
+      placeholder: 'Ṣàlàyé ohun tí o fẹ́ kí ẹgbẹ́ SUPER-AI 9ja mọ̀…',
+      submit: 'Mú ìránṣẹ́ sílẹ̀', privacy: 'Má ṣe fi ọ̀rọ̀ aṣínà tàbí ìsọfúnni àkọọ́lẹ̀ tó ní ìkọ̀kọ̀ síbí.',
+      notConnected: 'A kò tíì fi ìránṣẹ́ rẹ ránṣẹ́. A kò tíì so ọ̀nà fífi ìránṣẹ́ ránṣẹ́ pọ̀ mọ́ fọ́ọ̀mù yìí.'
+    },
+    ha: {
+      eyebrow: 'HANYAR TUNTUƁA · SUPER-AI 9JA',
+      title: 'Mu fara fara tattaunawa.',
+      intro: 'Faɗi irin taimakon da kake buƙata. Cika fom ɗin don shirya saƙonka.',
+      name: 'Sunanka', email: 'Adireshin imel', topic: 'Me za mu taimaka maka da shi?',
+      topics: ['Koyo da darussa', 'Asusu da shiga', 'Haɗin gwiwa', 'Ra’ayoyi da shawarwari', 'Wani abu daban'],
+      subject: 'Taken saƙo', message: 'Saƙonka',
+      placeholder: 'Ƙara bayani ga ƙungiyar SUPER-AI 9ja…',
+      submit: 'Shirya saƙo', privacy: 'Kada ka saka kalmar sirri ko bayanan asusu masu sirri.',
+      notConnected: 'Ba a aika saƙonka ba. Ba a haɗa hanyar aika saƙo da wannan fom ba tukuna.'
+    },
+    ig: {
+      eyebrow: 'ỤZỌ MKPARỊTA · SUPER-AI 9JA',
+      title: 'Ka anyị malite mkparịta ụka.',
+      intro: 'Gwa anyị ụdị enyemaka ị chọrọ. Dejupụta fọm a ka ozi gị dịrị njikere.',
+      name: 'Aha gị', email: 'Adreesị email', topic: 'Kedu ihe anyị ga-enyere gị aka?',
+      topics: ['Mmụta na nkuzi', 'Akaụntụ na nbanye', 'Mmekọrịta', 'Echiche na aro', 'Ihe ọzọ'],
+      subject: 'Isiokwu ozi', message: 'Ozi gị',
+      placeholder: 'Kọwaara ndị otu SUPER-AI 9ja ihe ọzọ…',
+      submit: 'Kwadebe ozi', privacy: 'Etinyela paswọọdụ ma ọ bụ ozi akaụntụ nzuzo ebe a.',
+      notConnected: 'Ezigaghị ozi gị. Ejikọbeghị ụzọ izipu ozi na fọm a.'
+    }
+  };
+
+  const form = formCopy[language] ?? formCopy.en;
+
   return (
     <PageShell>
-      <main className="sa9-content-page">
+      <main className="sa9-content-page sa9-contact-page">
         <p className="eyebrow">{copy.contactEyebrow}</p>
         <h1>{copy.contactTitle}</h1>
         <p className="sa9-page-lead">{copy.contactIntro}</p>
-        <div className="sa9-principle-grid">
+
+        <section className="sa9-contact-team" aria-labelledby="sa9-contact-team-title">
+          <div className="sa9-contact-team__mark" aria-hidden="true">✳</div>
+          <div className="sa9-contact-team__content">
+            <p className="sa9-contact-team__eyebrow">OFFICIAL TEAM CONTACT</p>
+            <h2 id="sa9-contact-team-title">Contact</h2>
+            <p className="sa9-contact-team__name">SuperAi 9ja | APFA Team</p>
+            <p className="sa9-contact-team__location">
+              <span aria-hidden="true">⌖</span>
+              Benin City, Edo State, Nigeria
+            </p>
+          </div>
+          <span className="sa9-contact-team__stamp">9JA · APFA</span>
+        </section>
+
+        <section className="sa9-contact-workspace" aria-labelledby="contact-form-title">
+          <div className="sa9-contact-form-intro">
+            <span className="sa9-contact-form-index">{form.eyebrow}</span>
+            <h2 id="contact-form-title">{form.title}</h2>
+            <p>{form.intro}</p>
+            <div className="sa9-contact-signal" aria-hidden="true">
+              <span></span><span></span><span></span>
+              <span className="sa9-contact-signal-label">NAIJA · CONNECT</span>
+            </div>
+          </div>
+
+          <form
+            className="sa9-contact-form"
+            onSubmit={(event) => {
+              event.preventDefault();
+              setSubmitNotice(form.notConnected);
+            }}
+          >
+            <div className="sa9-contact-fields">
+              <label className="sa9-contact-field">
+                <span>{form.name}</span>
+                <input name="name" type="text" autoComplete="name" required placeholder={form.name} />
+              </label>
+
+              <label className="sa9-contact-field">
+                <span>{form.email}</span>
+                <input name="email" type="email" autoComplete="email" required placeholder="you@example.com" />
+              </label>
+
+              <label className="sa9-contact-field sa9-contact-field--wide">
+                <span>{form.topic}</span>
+                <select name="topic" required defaultValue="">
+                  <option value="" disabled>{form.topic}</option>
+                  {form.topics.map((topic) => <option key={topic} value={topic}>{topic}</option>)}
+                </select>
+              </label>
+
+              <label className="sa9-contact-field sa9-contact-field--wide">
+                <span>{form.subject}</span>
+                <input name="subject" type="text" required maxLength={120} placeholder={form.subject} />
+              </label>
+
+              <label className="sa9-contact-field sa9-contact-field--wide">
+                <span>{form.message}</span>
+                <textarea name="message" required minLength={10} maxLength={5000} rows={6} placeholder={form.placeholder} />
+              </label>
+            </div>
+
+            <p className="sa9-contact-privacy">{form.privacy}</p>
+            <button className="sa9-contact-submit" type="submit">
+              <span>{form.submit}</span><span aria-hidden="true">↗</span>
+            </button>
+
+            {submitNotice && (
+              <p className="sa9-contact-status" role="status" aria-live="polite">
+                {submitNotice}
+              </p>
+            )}
+          </form>
+        </section>
+
+        <div className="sa9-principle-grid sa9-contact-guides">
           <article className="sa9-principle-card">
-            <h2>{copy.contactLearningTitle}</h2><p>{copy.contactLearning}</p>
-            <Link className="sa9-text-link" to="/learning">{copy.courses}</Link>
+            <h2>{copy.contactLearningTitle}</h2>
+            <p>{copy.contactLearning}</p>
+            <Link className="sa9-text-link" to="/learning">{copy.courses} ↗</Link>
           </article>
           <article className="sa9-principle-card">
-            <h2>{copy.contactAccountTitle}</h2><p>{copy.contactAccount}</p>
-            <Link className="sa9-text-link" to="/login">{copy.signIn}</Link>
+            <h2>{copy.contactAccountTitle}</h2>
+            <p>{copy.contactAccount}</p>
+            <Link className="sa9-text-link" to="/login">{copy.signIn} ↗</Link>
           </article>
           <article className="sa9-principle-card">
-            <h2>{copy.contactPartnershipTitle}</h2><p>{copy.contactPartnership}</p>
+            <h2>{copy.contactPartnershipTitle}</h2>
+            <p>{copy.contactPartnership}</p>
           </article>
         </div>
+
         <p className="sa9-contact-note">{copy.contactHonest}</p>
-        <Link className="sa9-text-link" to="/">{copy.backHome}</Link>
+        <Link className="sa9-text-link" to="/">{copy.backHome} ↗</Link>
       </main>
     </PageShell>
   );
 }
-
-
 function NotFoundPage() {
   const { t } = useLanguage()
 
